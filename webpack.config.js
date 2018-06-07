@@ -13,7 +13,7 @@ const config = (env, argv) => ({
         exclude: [/elm-stuff/, /node_modules/],
         use:
           argv.mode === "production"
-            ? ["elm-hot-loader", "elm-webpack-loader"]
+            ? ["elm-webpack-loader"]
             : ["elm-webpack-loader?debug=true"]
       }
     ]
