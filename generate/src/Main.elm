@@ -1,11 +1,7 @@
 port module Main exposing (..)
 
-import Ast
-import Ast.Expression exposing (..)
-import Ast.Statement exposing (..)
+import Elm.Parser exposing (parse)
 import Html exposing (..)
-import Html.Events exposing (..)
-import Json.Decode as JD
 
 
 type alias Flags =
@@ -17,14 +13,15 @@ init { code } =
     ( (), output (addRoute code) )
 
 
+addRoute : String -> String
 addRoute code =
-    case Ast.parse code of
-        Ok ( _, _, statements ) ->
-            toString statements
+    case parse code of
+        Ok file ->
+            toString file
 
-        Err ( _, _, err ) ->
+        Err errors ->
             "Error parsing file:\n"
-                ++ String.join "\n" err
+                ++ String.join "\n" errors
 
 
 main : Program Flags () msg
