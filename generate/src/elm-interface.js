@@ -1,5 +1,5 @@
-var app = Elm.Main.fullscreen();
+var app = Elm.Main.fullscreen(window.flags);
 
-setTimeout(function() {
-  window.onMessage(document.body.textContent);
-}, 0);
+app.ports.output.subscribe(function(content) {
+  window.onMessage(content);
+});

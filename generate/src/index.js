@@ -8,6 +8,10 @@ const dom = new JSDOM(`<!DOCTYPE html><html><head><body></body></html>`, {
   runScripts: "outside-only"
 });
 
+dom.window.flags = {
+  code: fs.readFileSync("src/Router/Routes.elm").toString("utf-8")
+};
+
 dom.window.onMessage = msg => {
   console.log(msg);
 };
