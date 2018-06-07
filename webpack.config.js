@@ -1,6 +1,6 @@
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
-const config = (env, argv) => ({
+const config = {
   entry: "./src/index.js",
   output: {
     path: `${__dirname}/build`,
@@ -11,10 +11,7 @@ const config = (env, argv) => ({
       {
         test: /\.elm$/,
         exclude: [/elm-stuff/, /node_modules/],
-        use:
-          argv.mode === "production"
-            ? ["elm-webpack-loader"]
-            : ["elm-webpack-loader?debug=true"]
+        use: ["elm-webpack-loader"]
       }
     ]
   },
@@ -23,6 +20,6 @@ const config = (env, argv) => ({
       template: "src/index.ejs"
     })
   ]
-});
+};
 
 module.exports = config;
