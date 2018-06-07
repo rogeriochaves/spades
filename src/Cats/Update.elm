@@ -22,6 +22,9 @@ update msgFor model =
         Types.MsgForCats msg ->
             updateCats msg model
 
+        _ ->
+            return model Cmd.none
+
 
 updateCats : Msg -> Model -> Return Msg Model
 updateCats msg model =
