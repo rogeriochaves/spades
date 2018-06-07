@@ -12,8 +12,13 @@ dom.window.flags = {
   code: fs.readFileSync("src/Router/Routes.elm").toString("utf-8")
 };
 
-dom.window.onMessage = msg => {
-  console.log(msg);
+dom.window.writeFile = content => {
+  fs.writeFileSync("src/Router/Routes.elm", content);
+  console.log("Done!");
+};
+
+dom.window.onError = err => {
+  console.error(err);
 };
 
 const script = new Script(`
