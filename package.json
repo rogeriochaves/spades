@@ -4,13 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server --mode=development --hot",
+    "start": "webpack-dev-server --mode=development --hot --open",
     "build": "webpack --mode=production --progress",
     "install": "cp ./bin/elm19-osx ./node_modules/.bin/elm"
   },
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "elm-hot-loader": "^0.5.4",
     "elm-webpack-loader": "git+https://github.com/xtian/elm-webpack-loader.git#0.19",
     "html-webpack-plugin": "^3.2.0",
     "webpack": "^4.11.1",
