@@ -2,12 +2,15 @@ module Cats.Update exposing (..)
 
 import Cats.Data exposing (..)
 import Cats.Types exposing (..)
+import RemoteData exposing (..)
 import Types
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( Model "cats" "waiting.gif"
+    ( { topic = "cats"
+      , gifUrl = NotAsked
+      }
     , getRandomGif "cats"
     )
 
@@ -23,10 +26,7 @@ updateCats : Msg -> Model -> ( Model, Cmd Msg )
 updateCats msg model =
     case msg of
         MorePlease ->
-            ( model, getRandomGif model.topic )
+            ( { model | gifUrl = Loading }, getRandomGif model.topic )
 
-        NewGif (Ok newUrl) ->
-            ( Model model.topic newUrl, Cmd.none )
-
-        NewGif (Err _) ->
-            ( model, Cmd.none )
+        NewGif result ->
+            ( { model | gifUrl = result }, Cmd.none )

@@ -1,14 +1,15 @@
 module Cats.Types exposing (..)
 
 import Http
+import RemoteData exposing (..)
 
 
 type alias Model =
     { topic : String
-    , gifUrl : String
+    , gifUrl : WebData String
     }
 
 
 type Msg
     = MorePlease
-    | NewGif (Result Http.Error String)
+    | NewGif (WebData String)
