@@ -1,8 +1,11 @@
 {
-  "name": "generate",
+  "name": "elm-on-rails",
   "version": "0.0.1",
-  "description": "Generate code for elm projects",
+  "description": "A framework for building Elm projects with a CLI to help",
   "main": "index.js",
+  "bin": {
+    "elm-generate": "./bin/elm-generate"
+  },
   "scripts": {
     "watch": "watch 'npm run build' src",
     "build": "elm make src/Main.elm --output out/elm.js",
