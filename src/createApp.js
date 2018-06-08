@@ -5,14 +5,16 @@ const path = require("path");
 
 module.exports = name => {
   fs.mkdirSync(name);
+
+  const boilerplatePath = path.join(__dirname, "..", "boilerplate");
   const ignoredFiles = fs
-    .readFileSync(`${__dirname}/../boilerplate/.gitignore.template`)
+    .readFileSync(path.join(boilerplatePath, ".gitignore.template"))
     .toString("utf-8")
     .split("\n");
   const filter = file =>
-    !ignoredFiles.some(ignored => file.indexOf(ignored) >= 0);
+    !ignoredFiles.some(ignored => file.split("/").pop() === ignored);
 
-  ncp(`${__dirname}/../boilerplate`, name, { filter }).then(() => {
+  ncp(boilerplatePath, name, { filter }).then(() => {
     fs.renameSync(
       path.join(name, ".gitignore.template"),
       path.join(name, ".gitignore")
