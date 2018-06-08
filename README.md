@@ -1,3 +1,18 @@
+# Getting Started
+
+```
+npm -g install git+https://github.com/rogeriochaves/elm-on-rails.git
+elm generate app MyProject
+```
+
+# Generators
+
+## Add new route
+
+```
+elm generate route NewPage
+```
+
 # Features
 
 - Elm 0.19
