@@ -12,13 +12,15 @@ test(
       .then(() => {
         const newAppFiles = fs.readdirSync("temp/myapp");
         const ignoredFiles = fs
-          .readFileSync("boilerplate/.gitignore")
+          .readFileSync("boilerplate/.gitignore.template")
           .toString("utf-8")
           .split("\n");
+        ignoredFiles.push(".gitignore.template");
 
-        const boilerplateFiles = fs
+        let boilerplateFiles = fs
           .readdirSync("boilerplate")
           .filter(folder => !ignoredFiles.includes(folder));
+        boilerplateFiles = [".gitignore", ...boilerplateFiles];
 
         expect(newAppFiles).toEqual(boilerplateFiles);
       }),
