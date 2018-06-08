@@ -9,16 +9,25 @@
   "scripts": {
     "watch": "watch 'npm run build' src",
     "build": "elm make src/Main.elm --output out/elm.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "DEBUG=running jest"
   },
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "commander": "^2.15.1",
     "elm": "^0.18.0",
     "elm-format": "^0.6.1-alpha",
-    "jsdom": "^11.11.0"
+    "jsdom": "^11.11.0",
+    "ncp": "^2.0.0"
   },
   "devDependencies": {
+    "debug": "^3.1.0",
+    "jest": "^23.1.0",
     "watch": "^1.0.2"
+  },
+  "jest": {
+    "testPathIgnorePatterns": [
+      "elm-stuff"
+    ]
   }
 }
