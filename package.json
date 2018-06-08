@@ -1,20 +1,21 @@
 {
-  "name": "projectname",
-  "version": "1.0.0",
-  "description": "",
+  "name": "generate",
+  "version": "0.0.1",
+  "description": "Generate code for elm projects",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server --mode=development --hot --open",
-    "build": "webpack --mode=production --progress",
-    "install": "cp ./bin/elm19-osx ./node_modules/.bin/elm"
+    "watch": "watch 'npm run build' src",
+    "build": "elm make src/Main.elm --output out/elm.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "MIT",
+  "dependencies": {
+    "elm": "^0.18.0",
+    "elm-format": "^0.6.1-alpha",
+    "jsdom": "^11.11.0"
+  },
   "devDependencies": {
-    "elm-webpack-loader": "git+https://github.com/xtian/elm-webpack-loader.git#0.19",
-    "html-webpack-plugin": "^3.2.0",
-    "webpack": "^4.11.1",
-    "webpack-cli": "^3.0.3",
-    "webpack-dev-server": "^3.1.4"
+    "watch": "^1.0.2"
   }
 }
