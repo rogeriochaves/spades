@@ -1,6 +1,7 @@
 const { JSDOM } = require("jsdom");
 const { Script } = require("vm");
 const fs = require("fs");
+const { execSync } = require("child_process");
 const Elm = fs.readFileSync(`${__dirname}/../out/elm.js`);
 const ElmInterface = fs.readFileSync(`${__dirname}/elm-interface.js`);
 
@@ -14,6 +15,7 @@ dom.window.flags = {
 
 dom.window.writeFile = content => {
   fs.writeFileSync("src/Router/Routes.elm", content);
+  execSync("elm-format src/Router/Routes.elm --yes");
   console.log("Done!");
 };
 
