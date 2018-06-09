@@ -55,8 +55,8 @@ addRouteToPath name ( range, declaration ) =
 
                 newCase : Case
                 newCase =
-                    ( ( emptyRange, NamedPattern (QualifiedNameRef [] (name ++ "Page")) [] )
-                    , ( emptyRange, Literal ("/" ++ String.toLower name) )
+                    ( ranged <| NamedPattern (QualifiedNameRef [] (name ++ "Page")) []
+                    , ranged <| Literal ("/" ++ String.toLower name)
                     )
 
                 newExpression : Ranged Expression
@@ -93,21 +93,19 @@ addRouteParser name ( range, declaration ) =
                             let
                                 newRoute : Ranged Expression
                                 newRoute =
-                                    ( emptyRange
-                                    , Application
-                                        [ ( emptyRange, FunctionOrValue "map" )
-                                        , ( emptyRange, FunctionOrValue (name ++ "Page") )
-                                        , ( emptyRange
-                                          , ParenthesizedExpression
-                                                ( emptyRange
-                                                , Application
-                                                    [ ( emptyRange, FunctionOrValue "s" )
-                                                    , ( emptyRange, Literal (String.toLower name) )
-                                                    ]
-                                                )
-                                          )
-                                        ]
-                                    )
+                                    ranged <|
+                                        Application
+                                            [ ranged <| FunctionOrValue "map"
+                                            , ranged <| FunctionOrValue (name ++ "Page")
+                                            , ranged <|
+                                                ParenthesizedExpression
+                                                    (ranged <|
+                                                        Application
+                                                            [ ranged <| FunctionOrValue "s"
+                                                            , ranged <| Literal (String.toLower name)
+                                                            ]
+                                                    )
+                                            ]
 
                                 routesList : Ranged Expression
                                 routesList =
@@ -126,7 +124,7 @@ addRouteParser name ( range, declaration ) =
                             in
                             ( range
                             , Application
-                                [ ( emptyRange, FunctionOrValue "oneOf" )
+                                [ ranged <| FunctionOrValue "oneOf"
                                 , newRoutesList
                                 ]
                             )

@@ -10,12 +10,11 @@ suite : Test
 suite =
     describe "AddView"
         [ describe "addRenderRoute"
-            [ only <|
-                test "adds a page to the renderRoute function" <|
-                    \_ ->
-                        (fixtureFileHeader ++ fixtureRenderRouteBefore)
-                            |> applyTransformer (AddView.addRenderRoute "Example")
-                            |> Expect.equal (Ok <| clearWhitespace <| fixtureFileHeader ++ fixtureRenderRouteAfter)
+            [ test "adds a page to the renderRoute function" <|
+                \_ ->
+                    (fixtureFileHeader ++ fixtureRenderRouteBefore)
+                        |> applyTransformer (AddView.addRenderRoute "Example")
+                        |> Expect.equal (Ok <| clearWhitespace <| fixtureFileHeader ++ fixtureRenderRouteAfter)
             , test "ignores other types" <|
                 \_ ->
                     (fixtureFileHeader ++ fixtureSomeOtherCase)

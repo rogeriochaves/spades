@@ -3,7 +3,6 @@ module AddView exposing (..)
 import Elm.Syntax.Declaration exposing (..)
 import Elm.Syntax.Expression exposing (..)
 import Elm.Syntax.Pattern exposing (..)
-import Elm.Syntax.Range exposing (..)
 import Elm.Syntax.Ranged exposing (..)
 import Helpers exposing (..)
 
@@ -13,7 +12,7 @@ transform name code =
     case stringToFile code of
         Ok file ->
             file
-                -- |> updateFileDeclarations (addRenderRoute name)
+                |> updateFileDeclarations (addRenderRoute name)
                 |> fileToString
                 |> Ok
 
@@ -55,19 +54,15 @@ addRenderRoute name ( range, declaration ) =
                 newExpression =
                     case body.expression of
                         ( range, CaseExpression caseExpression ) ->
-                            let
-                                _ =
-                                    Debug.log "some case" (caseExpression.cases |> List.tail |> Maybe.andThen List.tail |> Maybe.andThen List.head)
-                            in
                             ( range, CaseExpression { caseExpression | cases = caseExpression.cases ++ [ newCase ] } )
 
                         _ ->
                             body.expression
             in
-            -- if function.declaration.name.value == "toPath" then
-            ( range, FuncDecl { function | declaration = { body | expression = newExpression } } )
+            if function.declaration.name.value == "renderRoute" then
+                ( range, FuncDecl { function | declaration = { body | expression = newExpression } } )
+            else
+                ( range, declaration )
 
-        -- else
-        -- ( range, declaration )
         _ ->
             ( range, declaration )
