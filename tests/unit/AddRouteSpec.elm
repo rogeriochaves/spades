@@ -1,15 +1,9 @@
 module AddRouteSpec exposing (..)
 
 import AddRoute
-import Elm.Parser as Parser
-import Elm.Processing as Processing
-import Elm.Syntax.Declaration exposing (..)
-import Elm.Syntax.File exposing (..)
-import Elm.Syntax.Ranged exposing (..)
-import Elm.Writer as Writer
 import Expect exposing (Expectation)
-import Regex exposing (..)
 import Test exposing (..)
+import TestHelpers exposing (..)
 
 
 suite : Test
@@ -67,24 +61,6 @@ suite =
         ]
 
 
-stringToFile : String -> Result (List String) File
-stringToFile string =
-    Parser.parse string
-        |> Result.map (Processing.process Processing.init)
-
-
-fileToString : File -> String
-fileToString file =
-    Writer.writeFile file
-        |> Writer.write
-
-
-applyTransformer : (Ranged Declaration -> Ranged Declaration) -> String -> Result (List String) String
-applyTransformer transformer string =
-    stringToFile string
-        |> Result.map (AddRoute.updateDeclarations transformer >> fileToString >> clearWhitespace)
-
-
 fixtureFileHeader : String
 fixtureFileHeader =
     """
@@ -93,17 +69,6 @@ module Router.Routes exposing (..)
 import Browser.Navigation
 import Url.Parser exposing ((</>), Parser, map, oneOf, parse, s, top)
 """
-
-
-clearWhitespace : String -> String
-clearWhitespace =
-    replace All (regex "\\s+module") (\_ -> "module")
-        >> replace All (regex "\\s+") (\_ -> " ")
-        >> replace All (regex "= ") (\_ -> "=")
-        >> replace All (regex "\\[ ") (\_ -> "[")
-        >> replace All (regex " \\]") (\_ -> "]")
-        >> replace All (regex "\\| ") (\_ -> "|")
-        >> replace All (regex " $") (\_ -> "")
 
 
 fixturePageTypeBefore : String

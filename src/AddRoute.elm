@@ -1,27 +1,23 @@
 module AddRoute exposing (..)
 
-import Elm.Parser as Parser
-import Elm.Processing as Processing
 import Elm.Syntax.Declaration exposing (..)
 import Elm.Syntax.Expression exposing (..)
-import Elm.Syntax.File exposing (..)
 import Elm.Syntax.Pattern exposing (..)
 import Elm.Syntax.Range exposing (..)
 import Elm.Syntax.Ranged exposing (..)
 import Elm.Syntax.Type exposing (..)
-import Elm.Writer as Writer
+import Helpers exposing (..)
 
 
 transform : String -> String -> Result String String
 transform name code =
-    case Parser.parse code of
-        Ok rawFile ->
-            Processing.process Processing.init rawFile
-                |> updateDeclarations (addPageType name)
-                |> updateDeclarations (addRouteToPath name)
-                |> updateDeclarations (addRouteParser name)
-                |> Writer.writeFile
-                |> Writer.write
+    case stringToFile code of
+        Ok file ->
+            file
+                |> updateFileDeclarations (addPageType name)
+                |> updateFileDeclarations (addRouteToPath name)
+                |> updateFileDeclarations (addRouteParser name)
+                |> fileToString
                 |> Ok
 
         Err errors ->
@@ -29,11 +25,6 @@ transform name code =
                 ("Error parsing file:\n"
                     ++ String.join "\n" errors
                 )
-
-
-updateDeclarations : (Ranged Declaration -> Ranged Declaration) -> File -> File
-updateDeclarations fn file =
-    { file | declarations = List.map fn file.declarations }
 
 
 addPageType : String -> Ranged Declaration -> Ranged Declaration
