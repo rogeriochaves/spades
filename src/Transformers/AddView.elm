@@ -1,10 +1,10 @@
-module AddView exposing (..)
+module Transformers.AddView exposing (..)
 
 import Elm.Syntax.Declaration exposing (..)
 import Elm.Syntax.Expression exposing (..)
 import Elm.Syntax.Pattern exposing (..)
 import Elm.Syntax.Ranged exposing (..)
-import Helpers exposing (..)
+import Transformers.Helpers exposing (..)
 
 
 transform : String -> String -> Result String String

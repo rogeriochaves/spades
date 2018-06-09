@@ -2,8 +2,8 @@ module TestHelpers exposing (..)
 
 import Elm.Syntax.Declaration exposing (..)
 import Elm.Syntax.Ranged exposing (..)
-import Helpers exposing (..)
 import Regex exposing (..)
+import Transformers.Helpers exposing (..)
 
 
 applyTransformer : (Ranged Declaration -> Ranged Declaration) -> String -> Result (List String) String

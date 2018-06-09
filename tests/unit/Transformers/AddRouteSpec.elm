@@ -1,9 +1,9 @@
-module AddRouteSpec exposing (..)
+module Transformers.AddRouteSpec exposing (..)
 
-import AddRoute
 import Expect exposing (Expectation)
 import Test exposing (..)
 import TestHelpers exposing (..)
+import Transformers.AddRoute as AddRoute
 
 
 suite : Test

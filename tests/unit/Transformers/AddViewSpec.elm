@@ -1,9 +1,9 @@
-module AddViewSpec exposing (..)
+module Transformers.AddViewSpec exposing (..)
 
-import AddView
 import Expect exposing (Expectation)
 import Test exposing (..)
 import TestHelpers exposing (..)
+import Transformers.AddView as AddView
 
 
 suite : Test

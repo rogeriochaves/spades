@@ -1,4 +1,4 @@
-module Helpers exposing (..)
+module Transformers.Helpers exposing (..)
 
 import Elm.Parser as Parser
 import Elm.Processing as Processing

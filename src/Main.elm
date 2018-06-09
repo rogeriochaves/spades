@@ -1,8 +1,8 @@
 port module Main exposing (..)
 
-import AddRoute
-import AddView
 import Html exposing (..)
+import Transformers.AddRoute as AddRoute
+import Transformers.AddView as AddView
 
 
 type alias Flags =

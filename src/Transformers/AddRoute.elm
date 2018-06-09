@@ -1,4 +1,4 @@
-module AddRoute exposing (..)
+module Transformers.AddRoute exposing (..)
 
 import Elm.Syntax.Declaration exposing (..)
 import Elm.Syntax.Expression exposing (..)
@@ -6,7 +6,7 @@ import Elm.Syntax.Pattern exposing (..)
 import Elm.Syntax.Range exposing (..)
 import Elm.Syntax.Ranged exposing (..)
 import Elm.Syntax.Type exposing (..)
-import Helpers exposing (..)
+import Transformers.Helpers exposing (..)
 
 
 transform : String -> String -> Result String String
