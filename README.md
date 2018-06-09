@@ -10,7 +10,7 @@ elm generate app MyProject
 ## Add new route
 
 ```
-elm generate route NewPage
+elm generate route Search
 ```
 
 # Features

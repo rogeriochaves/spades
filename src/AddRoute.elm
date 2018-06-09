@@ -12,14 +12,14 @@ import Elm.Syntax.Type exposing (..)
 import Elm.Writer as Writer
 
 
-transform : String -> Result String String
-transform code =
+transform : String -> String -> Result String String
+transform name code =
     case Parser.parse code of
         Ok rawFile ->
             Processing.process Processing.init rawFile
-                |> updateDeclarations addPageType
-                |> updateDeclarations addRouteToPath
-                |> updateDeclarations addRouteParser
+                |> updateDeclarations (addPageType name)
+                |> updateDeclarations (addRouteToPath name)
+                |> updateDeclarations (addRouteParser name)
                 |> Writer.writeFile
                 |> Writer.write
                 |> Ok
@@ -36,13 +36,13 @@ updateDeclarations fn file =
     { file | declarations = List.map fn file.declarations }
 
 
-addPageType : Ranged Declaration -> Ranged Declaration
-addPageType ( range, declaration ) =
+addPageType : String -> Ranged Declaration -> Ranged Declaration
+addPageType name ( range, declaration ) =
     case declaration of
         TypeDecl type_ ->
             let
                 newRoute =
-                    [ ValueConstructor "NewRoute" [] emptyRange ]
+                    [ ValueConstructor (name ++ "Page") [] emptyRange ]
             in
             if type_.name == "Page" then
                 ( range, TypeDecl { type_ | constructors = type_.constructors ++ newRoute } )
@@ -53,8 +53,8 @@ addPageType ( range, declaration ) =
             ( range, declaration )
 
 
-addRouteToPath : Ranged Declaration -> Ranged Declaration
-addRouteToPath ( range, declaration ) =
+addRouteToPath : String -> Ranged Declaration -> Ranged Declaration
+addRouteToPath name ( range, declaration ) =
     case declaration of
         FuncDecl function ->
             let
@@ -64,8 +64,8 @@ addRouteToPath ( range, declaration ) =
 
                 newCase : Case
                 newCase =
-                    ( ( emptyRange, NamedPattern (QualifiedNameRef [] "NewRoute") [] )
-                    , ( emptyRange, Literal "/new-route" )
+                    ( ( emptyRange, NamedPattern (QualifiedNameRef [] (name ++ "Page")) [] )
+                    , ( emptyRange, Literal ("/" ++ String.toLower name) )
                     )
 
                 newExpression : Ranged Expression
@@ -86,8 +86,8 @@ addRouteToPath ( range, declaration ) =
             ( range, declaration )
 
 
-addRouteParser : Ranged Declaration -> Ranged Declaration
-addRouteParser ( range, declaration ) =
+addRouteParser : String -> Ranged Declaration -> Ranged Declaration
+addRouteParser name ( range, declaration ) =
     case declaration of
         FuncDecl function ->
             let
@@ -105,13 +105,13 @@ addRouteParser ( range, declaration ) =
                                     ( emptyRange
                                     , Application
                                         [ ( emptyRange, FunctionOrValue "map" )
-                                        , ( emptyRange, FunctionOrValue "NewRoute" )
+                                        , ( emptyRange, FunctionOrValue (name ++ "Page") )
                                         , ( emptyRange
                                           , ParenthesizedExpression
                                                 ( emptyRange
                                                 , Application
                                                     [ ( emptyRange, FunctionOrValue "s" )
-                                                    , ( emptyRange, Literal "new-route" )
+                                                    , ( emptyRange, Literal (String.toLower name) )
                                                     ]
                                                 )
                                           )

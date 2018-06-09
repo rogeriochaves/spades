@@ -5,12 +5,12 @@ import Html exposing (..)
 
 
 type alias Flags =
-    { code : String }
+    { name : String, code : String }
 
 
 init : Flags -> ( (), Cmd msg )
-init { code } =
-    case AddRoute.transform code of
+init { name, code } =
+    case AddRoute.transform name code of
         Ok content ->
             ( (), onSuccess content )
 

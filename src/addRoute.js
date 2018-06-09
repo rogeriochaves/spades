@@ -5,12 +5,13 @@ const { execSync } = require("child_process");
 const Elm = fs.readFileSync(`${__dirname}/../out/elm.js`);
 const ElmInterface = fs.readFileSync(`${__dirname}/elmInterface.js`);
 
-module.exports = () => {
+module.exports = name => {
   const dom = new JSDOM(`<!DOCTYPE html><html><head><body></body></html>`, {
     runScripts: "outside-only"
   });
 
   dom.window.flags = {
+    name: name,
     code: fs.readFileSync("src/Router/Routes.elm").toString("utf-8")
   };
 

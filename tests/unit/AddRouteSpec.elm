@@ -19,36 +19,36 @@ suite =
             [ test "adds a page to the Page type" <|
                 \_ ->
                     (fixtureFileHeader ++ fixturePageTypeBefore)
-                        |> applyTransformer AddRoute.addPageType
+                        |> applyTransformer (AddRoute.addPageType "Example")
                         |> Expect.equal (Ok <| clearWhitespace <| fixtureFileHeader ++ fixturePageTypeAfter)
             , test "ignores other types" <|
                 \_ ->
                     (fixtureFileHeader ++ fixtureSomeOtherType)
-                        |> applyTransformer AddRoute.addPageType
+                        |> applyTransformer (AddRoute.addPageType "Example")
                         |> Expect.equal (Ok <| clearWhitespace <| fixtureFileHeader ++ fixtureSomeOtherType)
             ]
         , describe "addRouteToPath"
             [ test "adds a route on the toPath function" <|
                 \_ ->
                     (fixtureFileHeader ++ fixtureToPathBefore)
-                        |> applyTransformer AddRoute.addRouteToPath
+                        |> applyTransformer (AddRoute.addRouteToPath "Example")
                         |> Expect.equal (Ok <| clearWhitespace <| fixtureFileHeader ++ fixtureToPathAfter)
             , test "ignores other functions" <|
                 \_ ->
                     (fixtureFileHeader ++ fixtureSomeOtherCase)
-                        |> applyTransformer AddRoute.addRouteToPath
+                        |> applyTransformer (AddRoute.addRouteToPath "Example")
                         |> Expect.equal (Ok <| clearWhitespace <| fixtureFileHeader ++ fixtureSomeOtherCase)
             ]
         , describe "addRouteParser"
             [ test "adds a parser to the routes function" <|
                 \_ ->
                     (fixtureFileHeader ++ fixtureRoutesBefore)
-                        |> applyTransformer AddRoute.addRouteParser
+                        |> applyTransformer (AddRoute.addRouteParser "Example")
                         |> Expect.equal (Ok <| clearWhitespace <| fixtureFileHeader ++ fixtureRoutesAfter)
             , test "ignores other functions" <|
                 \_ ->
                     (fixtureFileHeader ++ fixtureSomeOtherRoutesFunction)
-                        |> applyTransformer AddRoute.addRouteParser
+                        |> applyTransformer (AddRoute.addRouteParser "Example")
                         |> Expect.equal (Ok <| clearWhitespace <| fixtureFileHeader ++ fixtureSomeOtherRoutesFunction)
             ]
         , test "transforms the whole file" <|
@@ -61,7 +61,7 @@ suite =
                         fixtureFileHeader ++ fixturePageTypeAfter ++ fixtureToPathAfter ++ fixtureRoutesAfter
                 in
                 fullFileBefore
-                    |> AddRoute.transform
+                    |> AddRoute.transform "Example"
                     |> Result.map clearWhitespace
                     |> Expect.equal (Ok <| clearWhitespace fullFileAfter)
         ]
@@ -125,7 +125,7 @@ type Page
     | NotFound
     | CatsPage
     | CounterPage
-    | NewRoute
+    | ExamplePage
 """
 
 
@@ -158,8 +158,8 @@ toPath page =
         Home ->
             "/"
 
-        NewRoute ->
-            "/new-route"
+        ExamplePage ->
+            "/example"
 """
 
 
@@ -198,7 +198,7 @@ routes =
         , map NotFound (s "404")
         , map CatsPage (s "cats")
         , map CounterPage (s "counter")
-        , map NewRoute (s "new-route")
+        , map ExamplePage (s "example")
         ]
 """
 
