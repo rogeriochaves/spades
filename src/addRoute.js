@@ -14,7 +14,7 @@ module.exports = () => {
     code: fs.readFileSync("src/Router/Routes.elm").toString("utf-8")
   };
 
-  dom.window.writeFile = content => {
+  dom.window.onSuccess = content => {
     fs.writeFileSync("src/Router/Routes.elm", content);
     execSync("elm-format src/Router/Routes.elm --yes");
     console.log("Done!");

@@ -9,7 +9,9 @@
   "scripts": {
     "watch": "watch 'npm run build' src",
     "build": "elm make src/Main.elm --output out/elm.js",
-    "test": "DEBUG=running jest"
+    "test": "npm run test:unit && npm run test:functional",
+    "test:unit": "elm-test tests/unit",
+    "test:functional": "DEBUG=running jest tests/functional"
   },
   "author": "",
   "license": "MIT",
@@ -22,6 +24,7 @@
   },
   "devDependencies": {
     "debug": "^3.1.0",
+    "elm-test": "^0.18.12",
     "jest": "^23.1.0",
     "watch": "^1.0.2"
   },
