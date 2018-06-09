@@ -14,10 +14,10 @@ init { transformer, args, code } =
     let
         transformed =
             case transformer of
-                "ROUTE" ->
+                "ADD_ROUTE" ->
                     AddRoute.transform args.name code
 
-                "VIEW" ->
+                "ADD_VIEW" ->
                     AddView.transform args.name code
 
                 _ ->

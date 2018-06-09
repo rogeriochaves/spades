@@ -39,7 +39,7 @@ const executeTransformation = flags =>
     dom.runVMScript(script);
   });
 
-const addView = namedTransformation("src/View.elm", "VIEW");
-const addRoute = namedTransformation("src/Router/Routes.elm", "ROUTE");
+const addView = namedTransformation("src/View.elm", "ADD_VIEW");
+const addRoute = namedTransformation("src/Router/Routes.elm", "ADD_ROUTE");
 
 module.exports = { addRoute, addView };

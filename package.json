@@ -8,10 +8,12 @@
   },
   "scripts": {
     "watch": "watch 'npm run build' src",
-    "build": "elm make --yes src/Main.elm --output out/elm.js",
-    "test": "npm run test:unit && npm run test:functional",
+    "build": "elm package install --yes; npm run monkeypatch; elm make --yes src/Main.elm --output out/elm.js",
+    "test": "npm run monkeypatch:tests && npm run test:unit && npm run test:functional",
     "test:unit": "elm-test tests/unit",
     "test:functional": "DEBUG=running jest tests/functional",
+    "monkeypatch": "echo 'Monkeypatching packages...' && cp -R monkey-patches/* elm-stuff/packages",
+    "monkeypatch:tests": "cd tests && elm package install --yes && echo 'Monkeypatching packages...' && cp -R ../monkey-patches/* elm-stuff/packages",
     "install": "npm run build"
   },
   "author": "",
