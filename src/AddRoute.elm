@@ -17,8 +17,9 @@ transform code =
     case Parser.parse code of
         Ok rawFile ->
             Processing.process Processing.init rawFile
-                |> addPageType
-                |> addRouteToPath
+                |> updateDeclarations addPageType
+                |> updateDeclarations addRouteToPath
+                |> updateDeclarations addRouteParser
                 |> Writer.writeFile
                 |> Writer.write
                 |> Ok
@@ -30,59 +31,122 @@ transform code =
                 )
 
 
-addPageType : File -> File
-addPageType file =
-    let
-        updateDeclarations ( range, declaration ) =
-            case declaration of
-                TypeDecl type_ ->
-                    let
-                        newRoute =
-                            [ ValueConstructor "NewRoute" [] emptyRange ]
-                    in
-                    if type_.name == "Page" then
-                        ( range, TypeDecl { type_ | constructors = type_.constructors ++ newRoute } )
-                    else
-                        ( range, declaration )
-
-                _ ->
-                    ( range, declaration )
-    in
-    { file | declarations = List.map updateDeclarations file.declarations }
+updateDeclarations : (Ranged Declaration -> Ranged Declaration) -> File -> File
+updateDeclarations fn file =
+    { file | declarations = List.map fn file.declarations }
 
 
-addRouteToPath : File -> File
-addRouteToPath file =
-    let
-        updateDeclarations ( range, declaration ) =
-            case declaration of
-                FuncDecl function ->
-                    let
-                        body : FunctionDeclaration
-                        body =
-                            function.declaration
+addPageType : Ranged Declaration -> Ranged Declaration
+addPageType ( range, declaration ) =
+    case declaration of
+        TypeDecl type_ ->
+            let
+                newRoute =
+                    [ ValueConstructor "NewRoute" [] emptyRange ]
+            in
+            if type_.name == "Page" then
+                ( range, TypeDecl { type_ | constructors = type_.constructors ++ newRoute } )
+            else
+                ( range, declaration )
 
-                        newCase : Case
-                        newCase =
-                            ( ( emptyRange, NamedPattern (QualifiedNameRef [] "NewRoute") [] )
-                            , ( emptyRange, Literal "/new-route" )
+        _ ->
+            ( range, declaration )
+
+
+addRouteToPath : Ranged Declaration -> Ranged Declaration
+addRouteToPath ( range, declaration ) =
+    case declaration of
+        FuncDecl function ->
+            let
+                body : FunctionDeclaration
+                body =
+                    function.declaration
+
+                newCase : Case
+                newCase =
+                    ( ( emptyRange, NamedPattern (QualifiedNameRef [] "NewRoute") [] )
+                    , ( emptyRange, Literal "/new-route" )
+                    )
+
+                newExpression : Ranged Expression
+                newExpression =
+                    case body.expression of
+                        ( range, CaseExpression caseExpression ) ->
+                            ( range, CaseExpression { caseExpression | cases = caseExpression.cases ++ [ newCase ] } )
+
+                        _ ->
+                            body.expression
+            in
+            if function.declaration.name.value == "toPath" then
+                ( range, FuncDecl { function | declaration = { body | expression = newExpression } } )
+            else
+                ( range, declaration )
+
+        _ ->
+            ( range, declaration )
+
+
+addRouteParser : Ranged Declaration -> Ranged Declaration
+addRouteParser ( range, declaration ) =
+    case declaration of
+        FuncDecl function ->
+            let
+                body : FunctionDeclaration
+                body =
+                    function.declaration
+
+                newExpression : Ranged Expression
+                newExpression =
+                    case body.expression of
+                        ( range, Application applicationExpressions ) ->
+                            let
+                                newRoute : Ranged Expression
+                                newRoute =
+                                    ( emptyRange
+                                    , Application
+                                        [ ( emptyRange, FunctionOrValue "map" )
+                                        , ( emptyRange, FunctionOrValue "NewRoute" )
+                                        , ( emptyRange
+                                          , ParenthesizedExpression
+                                                ( emptyRange
+                                                , Application
+                                                    [ ( emptyRange, FunctionOrValue "s" )
+                                                    , ( emptyRange, Literal "new-route" )
+                                                    ]
+                                                )
+                                          )
+                                        ]
+                                    )
+
+                                routesList : Ranged Expression
+                                routesList =
+                                    List.tail applicationExpressions
+                                        |> Maybe.andThen List.head
+                                        |> Maybe.withDefault ( emptyRange, ListExpr [] )
+
+                                newRoutesList : Ranged Expression
+                                newRoutesList =
+                                    case routesList of
+                                        ( range, ListExpr list ) ->
+                                            ( range, ListExpr (list ++ [ newRoute ]) )
+
+                                        _ ->
+                                            routesList
+                            in
+                            ( range
+                            , Application
+                                [ ( emptyRange, FunctionOrValue "oneOf" )
+                                , newRoutesList
+                                ]
                             )
 
-                        newExpression : Ranged Expression
-                        newExpression =
-                            case body.expression of
-                                ( range, CaseExpression caseExpression ) ->
-                                    ( range, CaseExpression { caseExpression | cases = caseExpression.cases ++ [ newCase ] } )
+                        _ ->
+                            body.expression
+            in
+            if function.declaration.name.value == "routes" then
+                ( range, FuncDecl { function | declaration = { body | expression = newExpression } } )
+            else
+                ( range, declaration )
 
-                                _ ->
-                                    body.expression
-                    in
-                    if function.declaration.name.value == "toPath" then
-                        ( range, FuncDecl { function | declaration = { body | expression = newExpression } } )
-                    else
-                        ( range, declaration )
-
-                _ ->
-                    ( range, declaration )
-    in
-    { file | declarations = List.map updateDeclarations file.declarations }
+        _ ->
+            ( range, declaration )

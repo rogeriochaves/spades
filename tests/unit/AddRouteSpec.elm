@@ -3,7 +3,9 @@ module AddRouteSpec exposing (..)
 import AddRoute
 import Elm.Parser as Parser
 import Elm.Processing as Processing
+import Elm.Syntax.Declaration exposing (..)
 import Elm.Syntax.File exposing (..)
+import Elm.Syntax.Ranged exposing (..)
 import Elm.Writer as Writer
 import Expect exposing (Expectation)
 import Regex exposing (..)
@@ -13,31 +15,50 @@ import Test exposing (..)
 suite : Test
 suite =
     describe "AddRoute"
-        [ test "adds a page to the Page type" <|
-            \_ ->
-                (fixtureFileHeader ++ fixturePageTypeBefore)
-                    |> applyTransformer AddRoute.addPageType
-                    |> Expect.equal (Ok <| clearWhitespace <| fixtureFileHeader ++ fixturePageTypeAfter)
+        [ describe "addPageType"
+            [ test "adds a page to the Page type" <|
+                \_ ->
+                    (fixtureFileHeader ++ fixturePageTypeBefore)
+                        |> applyTransformer AddRoute.addPageType
+                        |> Expect.equal (Ok <| clearWhitespace <| fixtureFileHeader ++ fixturePageTypeAfter)
+            , test "ignores other types" <|
+                \_ ->
+                    (fixtureFileHeader ++ fixtureSomeOtherType)
+                        |> applyTransformer AddRoute.addPageType
+                        |> Expect.equal (Ok <| clearWhitespace <| fixtureFileHeader ++ fixtureSomeOtherType)
+            ]
         , describe "addRouteToPath"
             [ test "adds a route on the toPath function" <|
                 \_ ->
                     (fixtureFileHeader ++ fixtureToPathBefore)
                         |> applyTransformer AddRoute.addRouteToPath
                         |> Expect.equal (Ok <| clearWhitespace <| fixtureFileHeader ++ fixtureToPathAfter)
-            , test "ignore other functions" <|
+            , test "ignores other functions" <|
                 \_ ->
                     (fixtureFileHeader ++ fixtureSomeOtherCase)
                         |> applyTransformer AddRoute.addRouteToPath
                         |> Expect.equal (Ok <| clearWhitespace <| fixtureFileHeader ++ fixtureSomeOtherCase)
             ]
+        , describe "addRouteParser"
+            [ test "adds a parser to the routes function" <|
+                \_ ->
+                    (fixtureFileHeader ++ fixtureRoutesBefore)
+                        |> applyTransformer AddRoute.addRouteParser
+                        |> Expect.equal (Ok <| clearWhitespace <| fixtureFileHeader ++ fixtureRoutesAfter)
+            , test "ignores other functions" <|
+                \_ ->
+                    (fixtureFileHeader ++ fixtureSomeOtherRoutesFunction)
+                        |> applyTransformer AddRoute.addRouteParser
+                        |> Expect.equal (Ok <| clearWhitespace <| fixtureFileHeader ++ fixtureSomeOtherRoutesFunction)
+            ]
         , test "transforms the whole file" <|
             \() ->
                 let
                     fullFileBefore =
-                        fixtureFileHeader ++ fixturePageTypeBefore ++ fixtureToPathBefore
+                        fixtureFileHeader ++ fixturePageTypeBefore ++ fixtureToPathBefore ++ fixtureRoutesBefore
 
                     fullFileAfter =
-                        fixtureFileHeader ++ fixturePageTypeAfter ++ fixtureToPathAfter
+                        fixtureFileHeader ++ fixturePageTypeAfter ++ fixtureToPathAfter ++ fixtureRoutesAfter
                 in
                 fullFileBefore
                     |> AddRoute.transform
@@ -58,10 +79,10 @@ fileToString file =
         |> Writer.write
 
 
-applyTransformer : (File -> File) -> String -> Result (List String) String
+applyTransformer : (Ranged Declaration -> Ranged Declaration) -> String -> Result (List String) String
 applyTransformer transformer string =
     stringToFile string
-        |> Result.map (transformer >> fileToString >> clearWhitespace)
+        |> Result.map (AddRoute.updateDeclarations transformer >> fileToString >> clearWhitespace)
 
 
 fixtureFileHeader : String
@@ -79,10 +100,13 @@ clearWhitespace =
     replace All (regex "\\s+module") (\_ -> "module")
         >> replace All (regex "\\s+") (\_ -> " ")
         >> replace All (regex "= ") (\_ -> "=")
+        >> replace All (regex "\\[ ") (\_ -> "[")
+        >> replace All (regex " \\]") (\_ -> "]")
         >> replace All (regex "\\| ") (\_ -> "|")
         >> replace All (regex " $") (\_ -> "")
 
 
+fixturePageTypeBefore : String
 fixturePageTypeBefore =
     """
 type Page
@@ -93,6 +117,7 @@ type Page
 """
 
 
+fixturePageTypeAfter : String
 fixturePageTypeAfter =
     """
 type Page
@@ -104,6 +129,16 @@ type Page
 """
 
 
+fixtureSomeOtherType : String
+fixtureSomeOtherType =
+    """
+type MyCrazyType
+    = Foo
+    | Bar
+"""
+
+
+fixtureToPathBefore : String
 fixtureToPathBefore =
     """
 toPath : Page -> String
@@ -114,6 +149,7 @@ toPath page =
 """
 
 
+fixtureToPathAfter : String
 fixtureToPathAfter =
     """
 toPath : Page -> String
@@ -127,6 +163,7 @@ toPath page =
 """
 
 
+fixtureSomeOtherCase : String
 fixtureSomeOtherCase =
     """
 someOtherCase : Page -> String
@@ -134,4 +171,44 @@ someOtherCase page =
     case page of
         Home ->
             "/"
+"""
+
+
+fixtureRoutesBefore : String
+fixtureRoutesBefore =
+    """
+routes : Parser (Page -> a) a
+routes =
+    oneOf
+        [ map Home top
+        , map NotFound (s "404")
+        , map CatsPage (s "cats")
+        , map CounterPage (s "counter")
+        ]
+"""
+
+
+fixtureRoutesAfter : String
+fixtureRoutesAfter =
+    """
+routes : Parser (Page -> a) a
+routes =
+    oneOf
+        [ map Home top
+        , map NotFound (s "404")
+        , map CatsPage (s "cats")
+        , map CounterPage (s "counter")
+        , map NewRoute (s "new-route")
+        ]
+"""
+
+
+fixtureSomeOtherRoutesFunction : String
+fixtureSomeOtherRoutesFunction =
+    """
+otherRoutes : Parser (Page -> a) a
+otherRoutes =
+    oneOf
+        [ map Home top
+        ]
 """
