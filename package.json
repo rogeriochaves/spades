@@ -8,7 +8,7 @@
   },
   "scripts": {
     "watch": "watch 'npm run build' src",
-    "build": "elm make src/Main.elm --output out/elm.js",
+    "build": "elm make --yes src/Main.elm --output out/elm.js",
     "test": "npm run test:unit && npm run test:functional",
     "test:unit": "elm-test tests/unit",
     "test:functional": "DEBUG=running jest tests/functional",
