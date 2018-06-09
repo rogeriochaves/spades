@@ -1,16 +1,29 @@
 port module Main exposing (..)
 
 import AddRoute
+import AddView
 import Html exposing (..)
 
 
 type alias Flags =
-    { name : String, code : String }
+    { transformer : String, args : { name : String }, code : String }
 
 
 init : Flags -> ( (), Cmd msg )
-init { name, code } =
-    case AddRoute.transform name code of
+init { transformer, args, code } =
+    let
+        transformed =
+            case transformer of
+                "ROUTE" ->
+                    AddRoute.transform args.name code
+
+                "VIEW" ->
+                    AddView.transform args.name code
+
+                _ ->
+                    Err "Code transformer not found"
+    in
+    case transformed of
         Ok content ->
             ( (), onSuccess content )
 
