@@ -28,114 +28,70 @@ transform name code =
 
 
 addPageType : String -> Ranged Declaration -> Ranged Declaration
-addPageType name ( range, declaration ) =
-    case declaration of
-        TypeDecl type_ ->
-            let
-                newRoute =
-                    [ ValueConstructor (name ++ "Page") [] emptyRange ]
-            in
-            if type_.name == "Page" then
-                ( range, TypeDecl { type_ | constructors = type_.constructors ++ newRoute } )
-            else
-                ( range, declaration )
-
-        _ ->
-            ( range, declaration )
+addPageType name =
+    addNewUnionType "Page"
+        (ValueConstructor (name ++ "Page") [] emptyRange)
 
 
 addRouteToPath : String -> Ranged Declaration -> Ranged Declaration
-addRouteToPath name ( range, declaration ) =
-    case declaration of
-        FuncDecl function ->
-            let
-                body : FunctionDeclaration
-                body =
-                    function.declaration
-
-                newCase : Case
-                newCase =
-                    ( ranged <| NamedPattern (QualifiedNameRef [] (name ++ "Page")) []
-                    , ranged <| Literal ("/" ++ String.toLower name)
-                    )
-
-                newExpression : Ranged Expression
-                newExpression =
-                    case body.expression of
-                        ( range, CaseExpression caseExpression ) ->
-                            ( range, CaseExpression { caseExpression | cases = caseExpression.cases ++ [ newCase ] } )
-
-                        _ ->
-                            body.expression
-            in
-            if function.declaration.name.value == "toPath" then
-                ( range, FuncDecl { function | declaration = { body | expression = newExpression } } )
-            else
-                ( range, declaration )
-
-        _ ->
-            ( range, declaration )
+addRouteToPath name =
+    let
+        newCase : Case
+        newCase =
+            ( ranged <| NamedPattern (QualifiedNameRef [] (name ++ "Page")) []
+            , ranged <| Literal ("/" ++ String.toLower name)
+            )
+    in
+    updateFunctionBody "toPath"
+        (addCaseBranch newCase)
 
 
 addRouteParser : String -> Ranged Declaration -> Ranged Declaration
-addRouteParser name ( range, declaration ) =
-    case declaration of
-        FuncDecl function ->
-            let
-                body : FunctionDeclaration
-                body =
-                    function.declaration
-
-                newExpression : Ranged Expression
-                newExpression =
-                    case body.expression of
-                        ( range, Application applicationExpressions ) ->
-                            let
-                                newRoute : Ranged Expression
-                                newRoute =
-                                    ranged <|
-                                        Application
-                                            [ ranged <| FunctionOrValue "map"
-                                            , ranged <| FunctionOrValue (name ++ "Page")
-                                            , ranged <|
-                                                ParenthesizedExpression
-                                                    (ranged <|
-                                                        Application
-                                                            [ ranged <| FunctionOrValue "s"
-                                                            , ranged <| Literal (String.toLower name)
-                                                            ]
-                                                    )
-                                            ]
-
-                                routesList : Ranged Expression
-                                routesList =
-                                    List.tail applicationExpressions
-                                        |> Maybe.andThen List.head
-                                        |> Maybe.withDefault ( emptyRange, ListExpr [] )
-
-                                newRoutesList : Ranged Expression
-                                newRoutesList =
-                                    case routesList of
-                                        ( range, ListExpr list ) ->
-                                            ( range, ListExpr (list ++ [ newRoute ]) )
-
-                                        _ ->
-                                            routesList
-                            in
-                            ( range
-                            , Application
-                                [ ranged <| FunctionOrValue "oneOf"
-                                , newRoutesList
-                                ]
+addRouteParser name =
+    let
+        newRoute : Ranged Expression
+        newRoute =
+            ranged <|
+                Application
+                    [ ranged <| FunctionOrValue "map"
+                    , ranged <| FunctionOrValue (name ++ "Page")
+                    , ranged <|
+                        ParenthesizedExpression
+                            (ranged <|
+                                Application
+                                    [ ranged <| FunctionOrValue "s"
+                                    , ranged <| Literal (String.toLower name)
+                                    ]
                             )
+                    ]
+    in
+    updateFunctionBody "routes"
+        (\expression ->
+            case expression of
+                ( range, Application applicationExpressions ) ->
+                    let
+                        routesList : Ranged Expression
+                        routesList =
+                            List.tail applicationExpressions
+                                |> Maybe.andThen List.head
+                                |> Maybe.withDefault ( emptyRange, ListExpr [] )
 
-                        _ ->
-                            body.expression
-            in
-            if function.declaration.name.value == "routes" then
-                ( range, FuncDecl { function | declaration = { body | expression = newExpression } } )
-            else
-                ( range, declaration )
+                        newRoutesList : Ranged Expression
+                        newRoutesList =
+                            case routesList of
+                                ( range, ListExpr list ) ->
+                                    ( range, ListExpr (list ++ [ newRoute ]) )
 
-        _ ->
-            ( range, declaration )
+                                _ ->
+                                    routesList
+                    in
+                    ( range
+                    , Application
+                        [ ranged <| FunctionOrValue "oneOf"
+                        , newRoutesList
+                        ]
+                    )
+
+                _ ->
+                    expression
+        )

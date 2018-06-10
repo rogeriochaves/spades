@@ -16,20 +16,9 @@ transform name code =
 
 
 addMsgType : String -> Ranged Declaration -> Ranged Declaration
-addMsgType name ( range, declaration ) =
-    case declaration of
-        TypeDecl type_ ->
-            let
-                newMsg =
-                    [ ValueConstructor ("MsgFor" ++ name)
-                        [ ranged <| Typed [ name, "Types" ] "Msg" [] ]
-                        emptyRange
-                    ]
-            in
-            if type_.name == "Msg" then
-                ( range, TypeDecl { type_ | constructors = type_.constructors ++ newMsg } )
-            else
-                ( range, declaration )
-
-        _ ->
-            ( range, declaration )
+addMsgType name =
+    addNewUnionType "Msg"
+        (ValueConstructor ("MsgFor" ++ name)
+            [ ranged <| Typed [ name, "Types" ] "Msg" [] ]
+            emptyRange
+        )

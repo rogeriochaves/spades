@@ -27,58 +27,35 @@ transform name code =
 
 
 addRenderRoute : String -> Ranged Declaration -> Ranged Declaration
-addRenderRoute name ( range, declaration ) =
-    case declaration of
-        FuncDecl function ->
-            let
-                body : FunctionDeclaration
-                body =
-                    function.declaration
-
-                newCase : Case
-                newCase =
-                    ( ranged <| NamedPattern (QualifiedNameRef [] (name ++ "Page")) []
+addRenderRoute name =
+    let
+        newCase : Case
+        newCase =
+            ( ranged <| NamedPattern (QualifiedNameRef [] (name ++ "Page")) []
+            , ranged <|
+                Application
+                    [ ranged <| QualifiedExpr [ "Element" ] "map"
+                    , ranged <| FunctionOrValue ("MsgFor" ++ name)
                     , ranged <|
-                        Application
-                            [ ranged <| QualifiedExpr [ "Element" ] "map"
-                            , ranged <| FunctionOrValue ("MsgFor" ++ name)
-                            , ranged <|
-                                ParenthesizedExpression
-                                    (ranged <|
-                                        Application
-                                            [ ranged <| QualifiedExpr [ name, "View" ] "view"
-                                            , ranged <| RecordAccess (ranged <| FunctionOrValue "model") (String.toLower name)
-                                            ]
-                                    )
-                            ]
-                    )
-
-                newExpression : Ranged Expression
-                newExpression =
-                    case body.expression of
-                        ( range, CaseExpression caseExpression ) ->
-                            ( range, CaseExpression { caseExpression | cases = caseExpression.cases ++ [ newCase ] } )
-
-                        _ ->
-                            body.expression
-            in
-            if function.declaration.name.value == "renderRoute" then
-                ( range, FuncDecl { function | declaration = { body | expression = newExpression } } )
-            else
-                ( range, declaration )
-
-        _ ->
-            ( range, declaration )
+                        ParenthesizedExpression
+                            (ranged <|
+                                Application
+                                    [ ranged <| QualifiedExpr [ name, "View" ] "view"
+                                    , ranged <| RecordAccess (ranged <| FunctionOrValue "model") (String.toLower name)
+                                    ]
+                            )
+                    ]
+            )
+    in
+    updateFunctionBody "renderRoute"
+        (addCaseBranch newCase)
 
 
 addImportView : String -> File -> File
-addImportView name file =
-    let
-        newImport =
-            { moduleName = [ name, "View" ]
-            , moduleAlias = Nothing
-            , exposingList = Nothing
-            , range = emptyRange
-            }
-    in
-    { file | imports = file.imports ++ [ newImport ] }
+addImportView name =
+    addImport
+        { moduleName = [ name, "View" ]
+        , moduleAlias = Nothing
+        , exposingList = Nothing
+        , range = emptyRange
+        }
