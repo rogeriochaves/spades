@@ -5,6 +5,7 @@ import Elm.Processing as Processing
 import Elm.Syntax.Declaration exposing (..)
 import Elm.Syntax.Expression exposing (..)
 import Elm.Syntax.File exposing (..)
+import Elm.Syntax.Infix exposing (..)
 import Elm.Syntax.Module exposing (..)
 import Elm.Syntax.Range exposing (..)
 import Elm.Syntax.Ranged exposing (..)
@@ -111,3 +112,18 @@ updateTypeAliasDefinition typeAliasName fn ( range, declaration ) =
 addImport : Import -> File -> File
 addImport newImport file =
     { file | imports = file.imports ++ [ newImport ] }
+
+
+addToLastRightPipe : Ranged Expression -> Ranged Expression -> Ranged Expression
+addToLastRightPipe extraExpr expr =
+    case expr of
+        ( range, OperatorApplication "|>" Left rightExpr leftExpr ) ->
+            ( range
+            , OperatorApplication "|>"
+                Left
+                rightExpr
+                (addToLastRightPipe extraExpr leftExpr)
+            )
+
+        _ ->
+            ranged <| OperatorApplication "|>" Left expr extraExpr
