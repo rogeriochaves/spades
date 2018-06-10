@@ -1,4 +1,4 @@
-module Transformers.AddView exposing (..)
+module Transformers.AddComponentView exposing (..)
 
 import Elm.Syntax.Declaration exposing (..)
 import Elm.Syntax.Expression exposing (..)

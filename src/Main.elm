@@ -1,8 +1,9 @@
 port module Main exposing (..)
 
 import Html exposing (..)
+import Transformers.AddComponentTypes as AddComponentTypes
+import Transformers.AddComponentView as AddComponentView
 import Transformers.AddRoute as AddRoute
-import Transformers.AddView as AddView
 
 
 type alias Flags =
@@ -17,8 +18,11 @@ init { transformer, args, code } =
                 "ADD_ROUTE" ->
                     AddRoute.transform args.name code
 
-                "ADD_VIEW" ->
-                    AddView.transform args.name code
+                "ADD_COMPONENT_VIEW" ->
+                    AddComponentView.transform args.name code
+
+                "ADD_COMPONENT_TYPES" ->
+                    AddComponentTypes.transform args.name code
 
                 _ ->
                     Err "Code transformer not found"

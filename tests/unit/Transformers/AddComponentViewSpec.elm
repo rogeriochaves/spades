@@ -1,25 +1,25 @@
-module Transformers.AddViewSpec exposing (..)
+module Transformers.AddComponentViewSpec exposing (..)
 
 import Expect exposing (Expectation)
 import Test exposing (..)
 import TestHelpers exposing (..)
-import Transformers.AddView as AddView
+import Transformers.AddComponentView as AddComponentView
 import Transformers.Helpers exposing (..)
 
 
 suite : Test
 suite =
-    describe "AddView"
+    describe "AddComponentView"
         [ describe "addRenderRoute"
             [ test "adds a page to the renderRoute function" <|
                 \_ ->
                     (fixtureFileHeaderBefore ++ fixtureRenderRouteBefore)
-                        |> applyTransformer (AddView.addRenderRoute "Example")
+                        |> applyTransformer (AddComponentView.addRenderRoute "Example")
                         |> Expect.equal (Ok <| clearWhitespace <| fixtureFileHeaderBefore ++ fixtureRenderRouteAfter)
             , test "ignores other types" <|
                 \_ ->
                     (fixtureFileHeaderBefore ++ fixtureSomeOtherCase)
-                        |> applyTransformer (AddView.addRenderRoute "Example")
+                        |> applyTransformer (AddComponentView.addRenderRoute "Example")
                         |> Expect.equal (Ok <| clearWhitespace <| fixtureFileHeaderBefore ++ fixtureSomeOtherCase)
             ]
         , describe "addImportView"
@@ -27,7 +27,7 @@ suite =
                 \_ ->
                     fixtureFileHeaderBefore
                         |> stringToFile
-                        |> Result.map (AddView.addImportView "Example" >> fileToString >> clearWhitespace)
+                        |> Result.map (AddComponentView.addImportView "Example" >> fileToString >> clearWhitespace)
                         |> Expect.equal (Ok <| clearWhitespace <| fixtureFileHeaderAfter)
             ]
         , test "transforms the whole file" <|
@@ -40,7 +40,7 @@ suite =
                         fixtureFileHeaderAfter ++ fixtureRenderRouteAfter
                 in
                 fullFileBefore
-                    |> AddView.transform "Example"
+                    |> AddComponentView.transform "Example"
                     |> Result.map clearWhitespace
                     |> Expect.equal (Ok <| clearWhitespace fullFileAfter)
         ]
