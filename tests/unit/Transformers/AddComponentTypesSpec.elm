@@ -10,7 +10,7 @@ import Transformers.Helpers exposing (..)
 suite : Test
 suite =
     describe "AddComponentTypes"
-        [ test "adds a page to the Page type" <|
+        [ test "adds a new type to the Msg type" <|
             \_ ->
                 (fixtureFileHeaderBefore ++ fixtureMsgsBefore)
                     |> applyTransformer (AddComponentTypes.addMsgType "Example")
@@ -21,6 +21,24 @@ suite =
                     |> stringToFile
                     |> Result.map (AddComponentTypes.addImportTypes "Example" >> fileToString >> clearWhitespace)
                     |> Expect.equal (Ok <| clearWhitespace <| fixtureFileHeaderAfter)
+        , test "adds a new attribute to the model" <|
+            \_ ->
+                (fixtureFileHeaderBefore ++ fixtureModelBefore)
+                    |> applyTransformer (AddComponentTypes.addNewModel "Example")
+                    |> Expect.equal (Ok <| clearWhitespace <| fixtureFileHeaderBefore ++ fixtureModelAfter)
+        , test "transforms the whole file" <|
+            \() ->
+                let
+                    fullFileBefore =
+                        fixtureFileHeaderBefore ++ fixtureMsgsBefore ++ fixtureModelBefore
+
+                    fullFileAfter =
+                        fixtureFileHeaderAfter ++ fixtureMsgsAfter ++ fixtureModelAfter
+                in
+                fullFileBefore
+                    |> AddComponentTypes.transform "Example"
+                    |> Result.map clearWhitespace
+                    |> Expect.equal (Ok <| clearWhitespace fullFileAfter)
         ]
 
 
@@ -65,4 +83,27 @@ type Msg
     | MsgForCats Cats.Types.Msg
     | MsgForCounter Counter.Types.Msg
     | MsgForExample Example.Types.Msg
+"""
+
+
+fixtureModelBefore : String
+fixtureModelBefore =
+    """
+type alias Model =
+    { router : Router.Types.Model
+    , cats : Cats.Types.Model
+    , counter : Counter.Types.Model
+    }
+"""
+
+
+fixtureModelAfter : String
+fixtureModelAfter =
+    """
+type alias Model =
+    { router : Router.Types.Model
+    , cats : Cats.Types.Model
+    , counter : Counter.Types.Model
+    , example : Example.Types.Model
+    }
 """

@@ -9,6 +9,7 @@ import Elm.Syntax.Module exposing (..)
 import Elm.Syntax.Range exposing (..)
 import Elm.Syntax.Ranged exposing (..)
 import Elm.Syntax.Type exposing (..)
+import Elm.Syntax.TypeAnnotation exposing (..)
 import Elm.Writer as Writer
 
 
@@ -57,6 +58,16 @@ addCaseBranch newCase expression =
             expression
 
 
+addFieldToRecordDefinition : RecordField -> Ranged TypeAnnotation -> Ranged TypeAnnotation
+addFieldToRecordDefinition newField typeAnnotation =
+    case typeAnnotation of
+        ( range, Record recordFields ) ->
+            ( range, Record (recordFields ++ [ newField ]) )
+
+        _ ->
+            typeAnnotation
+
+
 updateFunctionBody : String -> (Ranged Expression -> Ranged Expression) -> Ranged Declaration -> Ranged Declaration
 updateFunctionBody functionName fn ( range, declaration ) =
     case declaration of
@@ -72,6 +83,24 @@ updateFunctionBody functionName fn ( range, declaration ) =
             in
             if function.declaration.name.value == functionName then
                 ( range, FuncDecl { function | declaration = { body | expression = newExpression } } )
+            else
+                ( range, declaration )
+
+        _ ->
+            ( range, declaration )
+
+
+updateTypeAliasDefinition : String -> (Ranged TypeAnnotation -> Ranged TypeAnnotation) -> Ranged Declaration -> Ranged Declaration
+updateTypeAliasDefinition typeAliasName fn ( range, declaration ) =
+    case declaration of
+        AliasDecl typeAlias ->
+            let
+                newTypeAnnotation : Ranged TypeAnnotation
+                newTypeAnnotation =
+                    fn typeAlias.typeAnnotation
+            in
+            if typeAlias.name == typeAliasName then
+                ( range, AliasDecl { typeAlias | typeAnnotation = newTypeAnnotation } )
             else
                 ( range, declaration )
 

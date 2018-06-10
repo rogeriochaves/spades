@@ -11,16 +11,20 @@ import Transformers.Helpers exposing (..)
 
 transform : String -> String -> Result String String
 transform name code =
-    Ok code
+    case stringToFile code of
+        Ok file ->
+            file
+                |> addImportTypes name
+                |> updateFileDeclarations (addNewModel name)
+                |> updateFileDeclarations (addMsgType name)
+                |> fileToString
+                |> Ok
 
-
-addMsgType : String -> Ranged Declaration -> Ranged Declaration
-addMsgType name =
-    addNewUnionType "Msg"
-        (ValueConstructor ("MsgFor" ++ name)
-            [ ranged <| Typed [ name, "Types" ] "Msg" [] ]
-            emptyRange
-        )
+        Err errors ->
+            Err
+                ("Error parsing file:\n"
+                    ++ String.join "\n" errors
+                )
 
 
 addImportTypes : String -> File -> File
@@ -31,3 +35,25 @@ addImportTypes name =
         , exposingList = Nothing
         , range = emptyRange
         }
+
+
+addNewModel : String -> Ranged Declaration -> Ranged Declaration
+addNewModel name =
+    let
+        newField : RecordField
+        newField =
+            ( String.toLower name
+            , ranged <| Typed [ name, "Types" ] "Model" []
+            )
+    in
+    updateTypeAliasDefinition "Model"
+        (addFieldToRecordDefinition newField)
+
+
+addMsgType : String -> Ranged Declaration -> Ranged Declaration
+addMsgType name =
+    addNewUnionType "Msg"
+        (ValueConstructor ("MsgFor" ++ name)
+            [ ranged <| Typed [ name, "Types" ] "Msg" [] ]
+            emptyRange
+        )
