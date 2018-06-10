@@ -8,7 +8,7 @@ import Types
 init : Return Msg Model
 init =
     return
-        { sample : String
+        { sample = ""
         }
         Cmd.none
 
