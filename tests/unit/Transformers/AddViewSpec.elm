@@ -4,6 +4,7 @@ import Expect exposing (Expectation)
 import Test exposing (..)
 import TestHelpers exposing (..)
 import Transformers.AddView as AddView
+import Transformers.Helpers exposing (..)
 
 
 suite : Test
@@ -12,23 +13,31 @@ suite =
         [ describe "addRenderRoute"
             [ test "adds a page to the renderRoute function" <|
                 \_ ->
-                    (fixtureFileHeader ++ fixtureRenderRouteBefore)
+                    (fixtureFileHeaderBefore ++ fixtureRenderRouteBefore)
                         |> applyTransformer (AddView.addRenderRoute "Example")
-                        |> Expect.equal (Ok <| clearWhitespace <| fixtureFileHeader ++ fixtureRenderRouteAfter)
+                        |> Expect.equal (Ok <| clearWhitespace <| fixtureFileHeaderBefore ++ fixtureRenderRouteAfter)
             , test "ignores other types" <|
                 \_ ->
-                    (fixtureFileHeader ++ fixtureSomeOtherCase)
+                    (fixtureFileHeaderBefore ++ fixtureSomeOtherCase)
                         |> applyTransformer (AddView.addRenderRoute "Example")
-                        |> Expect.equal (Ok <| clearWhitespace <| fixtureFileHeader ++ fixtureSomeOtherCase)
+                        |> Expect.equal (Ok <| clearWhitespace <| fixtureFileHeaderBefore ++ fixtureSomeOtherCase)
+            ]
+        , describe "addImportView"
+            [ test "adds an import to the new view" <|
+                \_ ->
+                    fixtureFileHeaderBefore
+                        |> stringToFile
+                        |> Result.map (AddView.addImportView "Example" >> fileToString >> clearWhitespace)
+                        |> Expect.equal (Ok <| clearWhitespace <| fixtureFileHeaderAfter)
             ]
         , test "transforms the whole file" <|
             \() ->
                 let
                     fullFileBefore =
-                        fixtureFileHeader ++ fixtureRenderRouteBefore
+                        fixtureFileHeaderBefore ++ fixtureRenderRouteBefore
 
                     fullFileAfter =
-                        fixtureFileHeader ++ fixtureRenderRouteAfter
+                        fixtureFileHeaderAfter ++ fixtureRenderRouteAfter
                 in
                 fullFileBefore
                     |> AddView.transform "Example"
@@ -37,21 +46,22 @@ suite =
         ]
 
 
-fixtureFileHeader : String
-fixtureFileHeader =
+fixtureFileHeaderBefore : String
+fixtureFileHeaderBefore =
     """
 module View exposing (..)
 
-import Browser
-import Cats.View
 import Counter.View
-import Element exposing (..)
-import Element.Attributes exposing (..)
-import Element.Events exposing (..)
-import Router.Routes exposing (..)
-import Router.Types exposing (Msg(..))
-import Styles exposing (..)
-import Types exposing (..)
+"""
+
+
+fixtureFileHeaderAfter : String
+fixtureFileHeaderAfter =
+    """
+module View exposing (..)
+
+import Counter.View
+import Example.View
 """
 
 

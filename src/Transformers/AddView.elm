@@ -2,7 +2,9 @@ module Transformers.AddView exposing (..)
 
 import Elm.Syntax.Declaration exposing (..)
 import Elm.Syntax.Expression exposing (..)
+import Elm.Syntax.File exposing (..)
 import Elm.Syntax.Pattern exposing (..)
+import Elm.Syntax.Range exposing (..)
 import Elm.Syntax.Ranged exposing (..)
 import Transformers.Helpers exposing (..)
 
@@ -13,6 +15,7 @@ transform name code =
         Ok file ->
             file
                 |> updateFileDeclarations (addRenderRoute name)
+                |> addImportView name
                 |> fileToString
                 |> Ok
 
@@ -66,3 +69,16 @@ addRenderRoute name ( range, declaration ) =
 
         _ ->
             ( range, declaration )
+
+
+addImportView : String -> File -> File
+addImportView name file =
+    let
+        newImport =
+            { moduleName = [ name, "View" ]
+            , moduleAlias = Nothing
+            , exposingList = Nothing
+            , range = emptyRange
+            }
+    in
+    { file | imports = file.imports ++ [ newImport ] }
