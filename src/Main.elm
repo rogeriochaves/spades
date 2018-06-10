@@ -2,6 +2,7 @@ port module Main exposing (..)
 
 import Html exposing (..)
 import Transformers.AddComponentTypes as AddComponentTypes
+import Transformers.AddComponentUpdate as AddComponentUpdate
 import Transformers.AddComponentView as AddComponentView
 import Transformers.AddRoute as AddRoute
 
@@ -23,6 +24,9 @@ init { transformer, args, code } =
 
                 "ADD_COMPONENT_TYPES" ->
                     AddComponentTypes.transform args.name code
+
+                "ADD_COMPONENT_UPDATE" ->
+                    AddComponentUpdate.transform args.name code
 
                 _ ->
                     Err "Code transformer not found"

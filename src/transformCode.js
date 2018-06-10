@@ -48,5 +48,14 @@ const addComponentTypes = namedTransformation(
   "src/Types.elm",
   "ADD_COMPONENT_TYPES"
 );
+const addComponentUpdate = namedTransformation(
+  "src/Update.elm",
+  "ADD_COMPONENT_UPDATE"
+);
 
-module.exports = { addRoute, addComponentView, addComponentTypes };
+module.exports = {
+  addRoute,
+  addComponentView,
+  addComponentTypes,
+  addComponentUpdate
+};

@@ -3,12 +3,14 @@ const createApp = require("./createApp");
 const {
   addRoute,
   addComponentView,
-  addComponentTypes
+  addComponentTypes,
+  addComponentUpdate
 } = require("./transformCode");
 
 program.command("app <name>").action(createApp);
 program.command("route <Name>").action(addRoute);
 program.command("component-view <Name>").action(addComponentView);
 program.command("component-types <Name>").action(addComponentTypes);
+program.command("component-update <Name>").action(addComponentUpdate);
 
 program.parse(process.argv);
