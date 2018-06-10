@@ -2,6 +2,7 @@ const program = require("commander");
 const createApp = require("./createApp");
 const {
   addRoute,
+  addComponent,
   addComponentView,
   addComponentTypes,
   addComponentUpdate
@@ -9,6 +10,7 @@ const {
 
 program.command("app <name>").action(createApp);
 program.command("route <Name>").action(addRoute);
+program.command("component <Name>").action(addComponent);
 program.command("component-view <Name>").action(addComponentView);
 program.command("component-types <Name>").action(addComponentTypes);
 program.command("component-update <Name>").action(addComponentUpdate);

@@ -20,6 +20,7 @@
   "license": "MIT",
   "dependencies": {
     "commander": "^2.15.1",
+    "ejs": "^2.6.1",
     "elm": "^0.18.0",
     "elm-format": "^0.6.1-alpha",
     "jsdom": "^11.11.0",
