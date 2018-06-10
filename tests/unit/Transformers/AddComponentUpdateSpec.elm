@@ -20,6 +20,25 @@ suite =
                 (fixtureFileHeaderBefore ++ fixtureUpdateBefore)
                     |> applyTransformer (AddComponentUpdate.addUpdateMap "Example")
                     |> Expect.equal (Ok <| clearWhitespace <| fixtureFileHeaderBefore ++ fixtureUpdateAfter)
+        , test "adds an import to the new components updates" <|
+            \_ ->
+                fixtureFileHeaderBefore
+                    |> stringToFile
+                    |> Result.map (AddComponentUpdate.addImportUpdate "Example" >> fileToString >> clearWhitespace)
+                    |> Expect.equal (Ok <| clearWhitespace <| fixtureFileHeaderAfter)
+        , test "transforms the whole file" <|
+            \() ->
+                let
+                    fullFileBefore =
+                        fixtureFileHeaderBefore ++ fixtureInitBefore ++ fixtureUpdateBefore
+
+                    fullFileAfter =
+                        fixtureFileHeaderAfter ++ fixtureInitAfter ++ fixtureUpdateAfter
+                in
+                fullFileBefore
+                    |> AddComponentUpdate.transform "Example"
+                    |> Result.map clearWhitespace
+                    |> Expect.equal (Ok <| clearWhitespace fullFileAfter)
         ]
 
 

@@ -3,8 +3,6 @@ module Transformers.AddComponentUpdate exposing (..)
 import Elm.Syntax.Declaration exposing (..)
 import Elm.Syntax.Expression exposing (..)
 import Elm.Syntax.File exposing (..)
-import Elm.Syntax.Infix exposing (..)
-import Elm.Syntax.Pattern exposing (..)
 import Elm.Syntax.Range exposing (..)
 import Elm.Syntax.Ranged exposing (..)
 import Transformers.Helpers exposing (..)
@@ -15,6 +13,9 @@ transform name code =
     case stringToFile code of
         Ok file ->
             file
+                |> addImportUpdate name
+                |> updateFileDeclarations (addInitMap name)
+                |> updateFileDeclarations (addUpdateMap name)
                 |> fileToString
                 |> Ok
 
@@ -64,3 +65,13 @@ addUpdateMap name =
     in
     updateFunctionBody "update"
         (addToLastRightPipe newUpdateMap)
+
+
+addImportUpdate : String -> File -> File
+addImportUpdate name =
+    addImport
+        { moduleName = [ name, "Update" ]
+        , moduleAlias = Nothing
+        , exposingList = Nothing
+        , range = emptyRange
+        }
