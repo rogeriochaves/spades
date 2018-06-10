@@ -7,11 +7,22 @@ elm generate app MyProject
 
 # Generators
 
+## Add new component
+
+```
+elm generate component Search
+```
+
+This is the coolest generator, it will create a Search
+component under `src/`, update the main Model, Msg, Update, View and Routes for it
+
 ## Add new route
 
 ```
-elm generate route Search
+elm generate route Contact
 ```
+
+This will create a new Page type, route parser and route toPath case on the `src/Router/Routes.elm` file
 
 # Features
 
