@@ -365,10 +365,19 @@ writeTypeAnnotation ( _, typeAnnotation ) =
                 ]
 
         FunctionTypeAnnotation left right ->
+            let
+                addParensForSubTypeAnnotation type_ =
+                    case type_ of
+                        ( _, FunctionTypeAnnotation _ _ ) ->
+                            join [ string "(", writeTypeAnnotation type_, string ")" ]
+
+                        _ ->
+                            writeTypeAnnotation type_
+            in
             spaced
-                [ writeTypeAnnotation left
+                [ addParensForSubTypeAnnotation left
                 , string "->"
-                , writeTypeAnnotation right
+                , addParensForSubTypeAnnotation right
                 ]
 
 
