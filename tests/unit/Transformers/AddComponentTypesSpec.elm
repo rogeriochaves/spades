@@ -10,25 +10,40 @@ import Transformers.Helpers exposing (..)
 suite : Test
 suite =
     describe "AddComponentTypes"
-        [ describe "addMsgType"
-            [ test "adds a page to the Page type" <|
-                \_ ->
-                    (fixtureFileHeader ++ fixtureMsgsBefore)
-                        |> applyTransformer (AddComponentTypes.addMsgType "Example")
-                        |> Expect.equal (Ok <| clearWhitespace <| fixtureFileHeader ++ fixtureMsgsAfter)
-            , test "ignores other types" <|
-                \_ ->
-                    (fixtureFileHeader ++ fixtureSomeOtherType)
-                        |> applyTransformer (AddComponentTypes.addMsgType "Example")
-                        |> Expect.equal (Ok <| clearWhitespace <| fixtureFileHeader ++ fixtureSomeOtherType)
-            ]
+        [ test "adds a page to the Page type" <|
+            \_ ->
+                (fixtureFileHeaderBefore ++ fixtureMsgsBefore)
+                    |> applyTransformer (AddComponentTypes.addMsgType "Example")
+                    |> Expect.equal (Ok <| clearWhitespace <| fixtureFileHeaderBefore ++ fixtureMsgsAfter)
+        , test "adds an import to the new types" <|
+            \_ ->
+                fixtureFileHeaderBefore
+                    |> stringToFile
+                    |> Result.map (AddComponentTypes.addImportTypes "Example" >> fileToString >> clearWhitespace)
+                    |> Expect.equal (Ok <| clearWhitespace <| fixtureFileHeaderAfter)
         ]
 
 
-fixtureFileHeader : String
-fixtureFileHeader =
+fixtureFileHeaderBefore : String
+fixtureFileHeaderBefore =
     """
 module Types exposing (..)
+
+import Cats.Types
+import Counter.Types
+import Router.Types
+"""
+
+
+fixtureFileHeaderAfter : String
+fixtureFileHeaderAfter =
+    """
+module Types exposing (..)
+
+import Cats.Types
+import Counter.Types
+import Router.Types
+import Example.Types
 """
 
 
@@ -50,13 +65,4 @@ type Msg
     | MsgForCats Cats.Types.Msg
     | MsgForCounter Counter.Types.Msg
     | MsgForExample Example.Types.Msg
-"""
-
-
-fixtureSomeOtherType : String
-fixtureSomeOtherType =
-    """
-type MyCrazyType
-    = Foo
-    | Bar
 """

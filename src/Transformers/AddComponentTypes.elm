@@ -1,8 +1,7 @@
 module Transformers.AddComponentTypes exposing (..)
 
 import Elm.Syntax.Declaration exposing (..)
-import Elm.Syntax.Expression exposing (..)
-import Elm.Syntax.Pattern exposing (..)
+import Elm.Syntax.File exposing (..)
 import Elm.Syntax.Range exposing (..)
 import Elm.Syntax.Ranged exposing (..)
 import Elm.Syntax.Type exposing (..)
@@ -22,3 +21,13 @@ addMsgType name =
             [ ranged <| Typed [ name, "Types" ] "Msg" [] ]
             emptyRange
         )
+
+
+addImportTypes : String -> File -> File
+addImportTypes name =
+    addImport
+        { moduleName = [ name, "Types" ]
+        , moduleAlias = Nothing
+        , exposingList = Nothing
+        , range = emptyRange
+        }
