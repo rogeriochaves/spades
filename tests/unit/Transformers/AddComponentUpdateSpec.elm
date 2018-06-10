@@ -15,6 +15,11 @@ suite =
                 (fixtureFileHeaderBefore ++ fixtureInitBefore)
                     |> applyTransformer (AddComponentUpdate.addInitMap "Example")
                     |> Expect.equal (Ok <| clearWhitespace <| fixtureFileHeaderBefore ++ fixtureInitAfter)
+        , test "adds the new model to the update map" <|
+            \_ ->
+                (fixtureFileHeaderBefore ++ fixtureUpdateBefore)
+                    |> applyTransformer (AddComponentUpdate.addUpdateMap "Example")
+                    |> Expect.equal (Ok <| clearWhitespace <| fixtureFileHeaderBefore ++ fixtureUpdateAfter)
         ]
 
 
@@ -65,4 +70,23 @@ init _ =
         |> andMapCmd MsgForRouter Router.Update.init
         |> andMapCmd MsgForCounter Counter.Update.init
         |> andMapCmd MsgForExample Example.Update.init
+"""
+
+
+fixtureUpdateBefore : String
+fixtureUpdateBefore =
+    """
+update msg model =
+    singleton Model
+        |> andMapCmd MsgForRouter (Router.Update.update msg model.router)
+"""
+
+
+fixtureUpdateAfter : String
+fixtureUpdateAfter =
+    """
+update msg model =
+    singleton Model
+        |> andMapCmd MsgForRouter (Router.Update.update msg model.router)
+        |> andMapCmd MsgForExample (Example.Update.update msg model.example)
 """

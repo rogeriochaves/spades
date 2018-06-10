@@ -38,3 +38,29 @@ addInitMap name =
     in
     updateFunctionBody "init"
         (addToLastRightPipe newInitMap)
+
+
+addUpdateMap : String -> Ranged Declaration -> Ranged Declaration
+addUpdateMap name =
+    let
+        newUpdateMap =
+            ranged <|
+                Application
+                    [ ranged <| FunctionOrValue "andMapCmd"
+                    , ranged <| FunctionOrValue ("MsgFor" ++ name)
+                    , ranged <|
+                        ParenthesizedExpression
+                            (ranged <|
+                                Application
+                                    [ ranged <| QualifiedExpr [ name, "Update" ] "update"
+                                    , ranged <| FunctionOrValue "msg"
+                                    , ranged <|
+                                        RecordAccess
+                                            (ranged <| FunctionOrValue "model")
+                                            (String.toLower name)
+                                    ]
+                            )
+                    ]
+    in
+    updateFunctionBody "update"
+        (addToLastRightPipe newUpdateMap)
