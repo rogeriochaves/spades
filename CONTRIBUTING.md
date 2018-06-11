@@ -44,10 +44,10 @@ npm install
 npm start
 ```
 
-The **templates** are .ejs template files that are copied into the user's project when it needs new file, with placeholders to some variables such as generated the component name, they live under `src/templates`.
+The **templates** are .ejs template files that are copied into the user's project when it needs a new file, with placeholders to some variables such as the generated component name, they live under `src/templates`.
 
-The **transformers** are responsible for updating existing files, such as adding a new route to the routes file. This is a much complex task as we have to be sure to not generate invalid Elm code as a result.
+The **transformers** are responsible for updating existing files, such as adding a new route to the routes file. This is a much more complex task as we have to be sure to not generate invalid Elm code as a result.
 
-For creating the transformers we use the [elm-syntax](http://package.elm-lang.org/packages/stil4m/elm-syntax) library, which decodes Elm codes into an [AST](https://en.wikipedia.org/wiki/Abstract_syntax_tree) where we transform the code, and the encodes it back into valid Elm code.
+For creating the transformers we use the [elm-syntax](http://package.elm-lang.org/packages/stil4m/elm-syntax) library, which decodes Elm codes into an [AST](https://en.wikipedia.org/wiki/Abstract_syntax_tree) where we transform the code, and then encodes it back into valid Elm code.
 
 Everything is then coupled together by the CLI in the `src/index.js` file by using the [commander.js](https://github.com/tj/commander.js) library.
