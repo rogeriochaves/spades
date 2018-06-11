@@ -38,7 +38,7 @@ This will create a new Page type, route parser and route toPath case on the `src
 
 ## Does Elm needs a framework?
 
-Mostly not, at least much less than other programming languages, because Elm is already very focused on be the best language for frontend web development, has an [enforced architecture](https://guide.elm-lang.org/architecture/) and a lot of batteries included.
+Mostly not, at least much less than other programming languages, because Elm is already very focused on being the best language for frontend web development, has an [enforced architecture](https://guide.elm-lang.org/architecture/) and a lot of batteries included.
 
 However, it is still a language, not a framework, therefore it can't define somethings such as how you organize your files, how you scale the architecture, how you deploy your app, which libraries to use, among other things which are usually a source of concern to beginners.
 
