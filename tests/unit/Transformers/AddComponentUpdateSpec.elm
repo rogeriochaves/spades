@@ -105,7 +105,7 @@ update msg model =
 fixtureUpdateAfter : String
 fixtureUpdateAfter =
     """
-update : Msg -> Model -> Return Msg Model
+update : Msg -> (Model -> Return Msg Model)
 update msg model =
     singleton Model
         |> andMapCmd MsgForRouter (Router.Update.update msg model.router)
