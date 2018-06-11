@@ -1,13 +1,19 @@
-# Getting Started
+# Elm on Rails
+
+Elm on Rails is a framework for Elm that helps you quickly start a Single Page Application (SPA) ready to the real world, with an opinionated structure that allows your app to grow easily and well organized.
+
+It has a CLI generating all the necessary Elm boilerplate when adding new components to your application.
+
+## Getting Started
 
 ```
 npm -g install git+https://github.com/rogeriochaves/elm-on-rails.git
 elm generate app MyProject
 ```
 
-# Generators
+## Generators
 
-## Add new component
+### Add new component
 
 ```
 elm generate component Search
@@ -16,7 +22,7 @@ elm generate component Search
 This is the coolest generator, it will create a Search
 component under `src/`, update the main Model, Msg, Update, View and Routes for it
 
-## Add new route
+### Add new route
 
 ```
 elm generate route Contact
@@ -24,12 +30,50 @@ elm generate route Contact
 
 This will create a new Page type, route parser and route toPath case on the `src/Router/Routes.elm` file
 
-# Features
+# Demo
 
-- Elm 0.19
-- Architecture ready to grow into a bigger Elm app [(read more)](https://medium.com/@_rchaves_/structured-todomvc-example-with-elm-a68d87cd38da)
-- Routing and Navigation
-- Uses style-elements instead of html/css
-- Ready for development with webpack
-- RemoteData for better handling of http request
-- elm-return for better composition of update functions
+![elm-on-rails demo](https://user-images.githubusercontent.com/792201/41208764-e2aa697e-6cfc-11e8-96ac-15750f08f8fb.gif)
+
+# Advantages
+
+## Does Elm needs a framework?
+
+Mostly not, at least much less than other programming languages, because Elm is already very focused on be the best language for frontend web development, has an [enforced architecture](https://guide.elm-lang.org/architecture/) and a lot of batteries included.
+
+However, it is still a language, not a framework, therefore it can't define somethings such as how you organize your files, how you scale the architecture, how you deploy your app, which libraries to use, among other things which are usually a source of concern to beginners.
+
+With time, it is possible that more and more things are implemented on the language and removed from this framework, leaving maybe just the initial boilerplate and the code generators.
+
+## Elm on Rails Architecture
+
+Just like all other Elm apps, Elm on Rails follows [The Elm Architecture](https://guide.elm-lang.org/architecture/), this architecture basically dictates all the state flow within Elm, but still allows multiple organizations as your app grows.
+
+Elm on Rails then follows an organization with domain focus, similar to what is described on [this blogpost](https://medium.com/@_rchaves_/structured-todomvc-example-with-elm-a68d87cd38da).
+
+Another important thing in a real-world Elm app is a solution for parent-child communication, for that part, Elm on Rails uses the NoMap pattern described on [this other blogpost](https://medium.com/@_rchaves_/child-parent-communication-in-elm-outmsg-vs-translator-vs-nomap-patterns-f51b2a25ecb1).
+
+## Code Generators
+
+Some people find Elm code very verbose, and that the architecture needs too much boilerplate to work. This is the intentional trade-off that the Elm Language choose to leave the language as simple, readable and explicit as possible.
+
+To have the redability benefits, without the verbosity pain, Elm on Rails comes with a CLI to help generate code.
+
+## The best layout system you will ever use
+
+Thanks to Elm awesome type system and abstraction of the HTML the community could see things more clearly, and came up with a better way of layouting: style-elements
+
+We recommend watching this talk by Matthew Griffith, the creator of style-elements, to understant how it works:
+
+https://www.youtube.com/watch?v=NYb2GDWMIm0
+
+Elm on Rails comes with style-elements by default, and although you can remove it and use the standard html library, we really recommend you to give it a shot, you won't regret!
+
+## Other Batteries Included
+
+Aside from the advantaged mentioned above, Elm on Rails also comes with:
+
+- Ready for Elm 0.19
+- [Routing and Navigation](https://www.elm-tutorial.org/en/07-routing/cover.html)
+- [Webpack](https://webpack.js.org/) for better development experience and optimized build
+- [RemoteData](http://package.elm-lang.org/packages/krisajenkins/remotedata/latest/RemoteData) for better handling of http request
+- [elm-return](http://package.elm-lang.org/packages/Fresheyeball/elm-return/latest) for better composition of update functions (learn more: https://elmtown.audio/a3e2133b after 38 min)
