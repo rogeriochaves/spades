@@ -1,13 +1,13 @@
-# Elm on Rails
+# Spades
 
-Elm on Rails is a framework for Elm that helps you quickly start a Single Page Application (SPA) ready to the real world, with an opinionated structure that allows your app to grow easily and well organized.
+[Spades](https://www.google.com/search?tbm=isch&q=tree%20spade&tbs=imgo:1) is a framework for Elm that helps you quickly start a Single Page Application (SPA) ready to the real world, with an opinionated structure that allows your app to grow easily and well organized.
 
 It has a CLI generating all the necessary Elm boilerplate when adding new components to your application.
 
 ## Getting Started
 
 ```
-npm -g install git+https://github.com/rogeriochaves/elm-on-rails.git
+npm -g install git+https://github.com/rogeriochaves/spades.git
 elm generate app MyProject
 ```
 
@@ -32,7 +32,7 @@ This will create a new Page type, route parser and route toPath case on the `src
 
 # Demo
 
-![elm-on-rails demo](https://user-images.githubusercontent.com/792201/41208764-e2aa697e-6cfc-11e8-96ac-15750f08f8fb.gif)
+![spades demo](https://user-images.githubusercontent.com/792201/41208764-e2aa697e-6cfc-11e8-96ac-15750f08f8fb.gif)
 
 # Advantages
 
@@ -44,19 +44,19 @@ However, it is still a language, not a framework, therefore it can't define some
 
 With time, it is possible that more and more things are implemented on the language and removed from this framework, leaving maybe just the initial boilerplate and the code generators.
 
-## Elm on Rails Architecture
+## Spades Architecture
 
-Just like all other Elm apps, Elm on Rails follows [The Elm Architecture](https://guide.elm-lang.org/architecture/), this architecture basically dictates all the state flow within Elm, but still allows multiple organizations as your app grows.
+Just like all other Elm apps, Spades follows [The Elm Architecture](https://guide.elm-lang.org/architecture/), this architecture basically dictates all the state flow within Elm, but still allows multiple organizations as your app grows.
 
-Elm on Rails then follows an organization with domain focus, similar to what is described on [this blogpost](https://medium.com/@_rchaves_/structured-todomvc-example-with-elm-a68d87cd38da).
+Spades then follows an organization with domain focus, similar to what is described on [this blogpost](https://medium.com/@_rchaves_/structured-todomvc-example-with-elm-a68d87cd38da).
 
-Another important thing in a real-world Elm app is a solution for parent-child communication, for that part, Elm on Rails uses the NoMap pattern described on [this other blogpost](https://medium.com/@_rchaves_/child-parent-communication-in-elm-outmsg-vs-translator-vs-nomap-patterns-f51b2a25ecb1).
+Another important thing in a real-world Elm app is a solution for parent-child communication, for that part, Spades uses the NoMap pattern described on [this other blogpost](https://medium.com/@_rchaves_/child-parent-communication-in-elm-outmsg-vs-translator-vs-nomap-patterns-f51b2a25ecb1).
 
 ## Code Generators
 
 Some people find Elm code very verbose, and that the architecture needs too much boilerplate to work. This is the intentional trade-off that the Elm Language choose to leave the language as simple, readable and explicit as possible.
 
-To have the redability benefits, without the verbosity pain, Elm on Rails comes with a CLI to help generate code.
+To have the redability benefits, without the verbosity pain, Spades comes with a CLI to help generate code.
 
 ## The best layout system you will ever use
 
@@ -66,11 +66,11 @@ We recommend watching this talk by Matthew Griffith, the creator of style-elemen
 
 https://www.youtube.com/watch?v=NYb2GDWMIm0
 
-Elm on Rails comes with style-elements by default, and although you can remove it and use the standard html library, we really recommend you to give it a shot, you won't regret!
+Spades comes with style-elements by default, and although you can remove it and use the standard html library, we really recommend you to give it a shot, you won't regret!
 
 ## Other Batteries Included
 
-Aside from the advantaged mentioned above, Elm on Rails also comes with:
+Aside from the advantaged mentioned above, Spades also comes with:
 
 - Ready for Elm 0.19
 - [Routing and Navigation](https://www.elm-tutorial.org/en/07-routing/cover.html)
@@ -80,6 +80,6 @@ Aside from the advantaged mentioned above, Elm on Rails also comes with:
 
 # Contributing
 
-Just by using the framework and giving feedbacks you'll be helping a lot! You can give suggestions or report bugs on the [issues page](https://github.com/rogeriochaves/elm-on-rails/issues).
+Just by using the framework and giving feedbacks you'll be helping a lot! You can give suggestions or report bugs on the [issues page](https://github.com/rogeriochaves/spades/issues).
 
-If you want to contribute with Elm on Rails development, take a look on the [existing issues](https://github.com/rogeriochaves/elm-on-rails/issues) and read the [CONTRIBUTING.md](CONTRIBUTING.md) file.
+If you want to contribute with Spades development, take a look on the [existing issues](https://github.com/rogeriochaves/spades/issues) and read the [CONTRIBUTING.md](CONTRIBUTING.md) file.

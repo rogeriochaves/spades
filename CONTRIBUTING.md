@@ -28,11 +28,11 @@ npm run test
 
 You may also run `test:unit` and `test:functional` separetly.
 
-The unit tests test individual functions and files, while the functional tests are more end-to-end: it installs the Elm on Rails CLI and simulates a user creating a project and executing some commands.
+The unit tests test individual functions and files, while the functional tests are more end-to-end: it installs the Spades CLI and simulates a user creating a project and executing some commands.
 
 ## Architecture
 
-Elm on Rails is basically split in three parts: the **boilerplate**, the **templates** and the **transformers**.
+Spades is basically split in three parts: the **boilerplate**, the **templates** and the **transformers**.
 
 The **boilerplate** is the base application that is generated with the `elm generate app` command, it is fully-working a standalone aplication, which means that you can run it separelety if you wish to make changes to it.
 
