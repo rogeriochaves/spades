@@ -77,3 +77,9 @@ Aside from the advantaged mentioned above, Elm on Rails also comes with:
 - [Webpack](https://webpack.js.org/) for better development experience and optimized build
 - [RemoteData](http://package.elm-lang.org/packages/krisajenkins/remotedata/latest/RemoteData) for better handling of http request
 - [elm-return](http://package.elm-lang.org/packages/Fresheyeball/elm-return/latest) for better composition of update functions (learn more: https://elmtown.audio/a3e2133b after 38 min)
+
+# Contributing
+
+Just by using the framework and giving feedbacks you'll be helping a lot! You can give suggestions or report bugs on the [issues page](https://github.com/rogeriochaves/elm-on-rails/issues).
+
+If you want to contribute with Elm on Rails development, take a look on the [existing issues](https://github.com/rogeriochaves/elm-on-rails/issues) and read the [CONTRIBUTING.md](CONTRIBUTING.md) file.
