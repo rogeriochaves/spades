@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node server.js",
-    "build": "webpack --mode=production --progress",
+    "start:prod": "NODE_ENV=production node server.js",
+    "build": "webpack --mode=production --progress --json > build/stats.json",
     "install": "cp ./bin/elm19-osx ./node_modules/.bin/elm"
   },
   "author": "",
