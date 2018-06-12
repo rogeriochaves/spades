@@ -58,6 +58,12 @@ Some people find Elm code very verbose, and that the architecture needs too much
 
 To have the readability benefits, without the verbosity pain, Spades comes with a CLI to help generate code.
 
+## Server-Side Rendering
+
+Elm apps are usually rendered on the client, but Spades already come with a simple [express](https://expressjs.com/) server that renders the Elm app before sending the HTML to the client, improving performance for the user and [SEO](https://en.wikipedia.org/wiki/Search_engine_optimization).
+
+Read more: https://medium.com/walmartlabs/the-benefits-of-server-side-rendering-over-client-side-rendering-5d07ff2cefe8
+
 ## The best layout system you will ever use
 
 Thanks to Elm awesome type system and abstraction of the HTML the community could see things more clearly, and came up with a better way of layouting: style-elements

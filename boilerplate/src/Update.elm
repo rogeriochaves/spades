@@ -9,9 +9,9 @@ import Types exposing (..)
 
 
 init : Browser.Env flags -> Return Msg Model
-init _ =
+init { url } =
     singleton Model
-        |> andMapCmd MsgForRouter Router.Update.init
+        |> andMapCmd MsgForRouter (Router.Update.init url)
         |> andMapCmd MsgForCats Cats.Update.init
         |> andMapCmd MsgForCounter Counter.Update.init
 

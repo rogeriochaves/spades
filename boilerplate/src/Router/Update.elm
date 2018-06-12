@@ -6,12 +6,15 @@ import RemoteData exposing (..)
 import Router.Routes exposing (..)
 import Router.Types exposing (..)
 import Types
+import Url exposing (Url)
 import Url.Parser exposing (parse)
 
 
-init : Return Msg Model
-init =
-    return Home Cmd.none
+init : Url -> Return Msg Model
+init url =
+    return
+        (Maybe.withDefault NotFound <| parse routes url)
+        Cmd.none
 
 
 update : Types.Msg -> Model -> Return Msg Model

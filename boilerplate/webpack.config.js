@@ -1,5 +1,3 @@
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-
 const config = {
   entry: "./src/index.js",
   output: {
@@ -14,12 +12,7 @@ const config = {
         use: ["elm-webpack-loader"]
       }
     ]
-  },
-  plugins: [
-    new HtmlWebpackPlugin({
-      template: "src/index.ejs"
-    })
-  ]
+  }
 };
 
 module.exports = config;
