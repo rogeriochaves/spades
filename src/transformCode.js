@@ -25,7 +25,7 @@ const namedTransformation = (filePath, transformer) => name =>
 
 const executeTransformation = flags =>
   new Promise((resolve, reject) => {
-    const dom = new JSDOM(`<!DOCTYPE html><html><head><body></body></html>`, {
+    const dom = new JSDOM(`<!DOCTYPE html><html><body></body></html>`, {
       runScripts: "outside-only"
     });
 
