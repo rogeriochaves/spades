@@ -56,7 +56,7 @@ Another important thing in a real-world Elm app is a solution for parent-child c
 
 Some people find Elm code very verbose, and that the architecture needs too much boilerplate to work. This is the intentional trade-off that the Elm Language choose to leave the language as simple, readable and explicit as possible.
 
-To have the redability benefits, without the verbosity pain, Spades comes with a CLI to help generate code.
+To have the readability benefits, without the verbosity pain, Spades comes with a CLI to help generate code.
 
 ## The best layout system you will ever use
 
