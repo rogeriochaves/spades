@@ -1,3 +1,5 @@
+### DO NOT USE SPADES IN PRODUCTION YET, IT IS BETA
+
 # Spades
 
 [Spades](https://www.google.com/search?tbm=isch&q=tree%20spade&tbs=imgo:1) is a framework for Elm that helps you quickly start a Single Page Application (SPA) ready to the real world, with an opinionated structure that allows your app to grow easily and well organized.
