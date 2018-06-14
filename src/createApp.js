@@ -20,7 +20,7 @@ module.exports = (name, cmd) => {
       path.join(name, ".gitignore")
     );
 
-    cmd.serverless ? serverlessPackage(name) : ssrPackage(name);
+    if (cmd.serverless) serverlessPackage(name)
 
     console.log(
       "Your app is ready! Now run the following commands to get started:\n"
@@ -33,37 +33,26 @@ module.exports = (name, cmd) => {
 
 
 function serverlessPackage (name) {
-  renameConfigFiles(name, "static");
+  const handleFileErr = err => { if (err) console.log(err) };
 
-  fs.unlink(path.join(name, "server.js"), handleFileErr)
-  fs.unlink(path.join(name, "package.ssr.json"), handleFileErr)
-  fs.unlink(path.join(name, "webpack.config.ssr.js"), handleFileErr)
-}
+  // delete all ssr files
+  fs.unlink(path.join(name, "server.js"), handleFileErr);
+  fs.unlink(path.join(name, "src", "index.ejs"), handleFileErr);
+  fs.unlink(path.join(name, "package.json"), handleFileErr);
+  fs.unlink(path.join(name, "webpack.config.js"), handleFileErr);
 
-function ssrPackage (name) {
-  renameConfigFiles(name, "ssr")
-
-  fs.unlink(path.join(name, "package.static.json"), handleFileErr)
-  fs.unlink(path.join(name, "webpack.config.static.js"), handleFileErr)
-}
-
-function renameConfigFiles (name, type) {
   fs.renameSync(
-    path.join(name, `package.${type}.json`),
+    path.join(name, "package.static.json"),
     path.join(name, "package.json"),
   );
 
   fs.renameSync(
-    path.join(name, `webpack.config.${type}.js`),
+    path.join(name, "webpack.config.static.js"),
     path.join(name, "webpack.config.js")
   );
 
   fs.renameSync(
-    path.join(name, 'src', `index.${type}.ejs`),
-    path.join(name, 'src', `index.ejs`)
+    path.join(name, "src", "index.static.ejs"),
+    path.join(name, "src", "index.ejs")
   );
-}
-
-function handleFileErr (err) {
-  if (err) console.log(err)
 }
