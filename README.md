@@ -66,6 +66,12 @@ Elm apps are usually rendered on the client, but Spades already come with a simp
 
 Read more: https://medium.com/walmartlabs/the-benefits-of-server-side-rendering-over-client-side-rendering-5d07ff2cefe8
 
+You can disable this option using the `--serverless` flag while creating your project:
+
+```
+elm generate app MyProject --serverless
+```
+
 ## The best layout system you will ever use
 
 Thanks to Elm awesome type system and abstraction of the HTML the community could see things more clearly, and came up with a better way of layouting: style-elements
