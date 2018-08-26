@@ -1,8 +1,9 @@
-module Router.Update exposing (..)
+module Router.Update exposing (init, update)
 
-import Browser.Navigation exposing (pushUrl)
-import Helpers.Return exposing (Return, return)
+import Browser exposing (UrlRequest(..))
+import Browser.Navigation exposing (Key, load, pushUrl)
 import RemoteData exposing (..)
+import Return exposing (Return, return)
 import Router.Routes exposing (..)
 import Router.Types exposing (..)
 import Types
@@ -10,10 +11,12 @@ import Url exposing (Url)
 import Url.Parser exposing (parse)
 
 
-init : Url -> Return Msg Model
-init url =
+init : Url -> Key -> Return Msg Model
+init url key =
     return
-        (Maybe.withDefault NotFound <| parse routes url)
+        { page = Maybe.withDefault NotFound <| parse routes url
+        , key = key
+        }
         Cmd.none
 
 
@@ -30,8 +33,16 @@ update msgFor model =
 updateRouter : Msg -> Model -> Return Msg Model
 updateRouter msg model =
     case msg of
-        OnNavigation url ->
-            return (Maybe.withDefault NotFound <| parse routes url) Cmd.none
+        OnUrlChange url ->
+            return { model | page = Maybe.withDefault NotFound <| parse routes url } Cmd.none
+
+        OnUrlRequest urlRequest ->
+            case urlRequest of
+                Internal url ->
+                    ( model, pushUrl model.key <| Url.toString url )
+
+                External url ->
+                    ( model, load url )
 
         Go page ->
-            return model (pushUrl <| toPath page)
+            return model (pushUrl model.key <| toPath page)

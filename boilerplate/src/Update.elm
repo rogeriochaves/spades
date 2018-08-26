@@ -1,17 +1,19 @@
-module Update exposing (..)
+module Update exposing (andMapCmd, init, update)
 
 import Browser
+import Browser.Navigation exposing (Key)
 import Cats.Update
 import Counter.Update
-import Helpers.Return as Return exposing (Return, andMap, mapCmd, singleton)
+import Return exposing (Return, andMap, mapCmd, singleton)
 import Router.Update
 import Types exposing (..)
+import Url exposing (Url)
 
 
-init : Browser.Env flags -> Return Msg Model
-init { url } =
+init : flags -> Url -> Key -> Return Msg Model
+init _ url key =
     singleton Model
-        |> andMapCmd MsgForRouter (Router.Update.init url)
+        |> andMapCmd MsgForRouter (Router.Update.init url key)
         |> andMapCmd MsgForCats Cats.Update.init
         |> andMapCmd MsgForCounter Counter.Update.init
 

@@ -1,4 +1,4 @@
-module View exposing (..)
+module View exposing (renderRoute, view)
 
 import Browser
 import Cats.View
@@ -12,7 +12,7 @@ import Styles exposing (..)
 import Types exposing (..)
 
 
-view : Model -> Browser.Page Types.Msg
+view : Model -> Browser.Document Types.Msg
 view model =
     { title = "projectname"
     , body =
@@ -22,8 +22,9 @@ view model =
     }
 
 
+renderRoute : Model -> Element Styles variation Types.Msg
 renderRoute model =
-    case model.router of
+    case model.router.page of
         Home ->
             column NoStyle
                 [ spacing 5 ]
