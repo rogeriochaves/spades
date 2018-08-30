@@ -1,8 +1,10 @@
+const args = require('yargs').argv;
 const webpack = require("webpack");
 const express = require("express");
 const fs = require("fs");
 const { JSDOM } = require("jsdom");
 const { Script } = require("vm");
+const PORT = args.port || process.env.PORT || 8080;
 
 const app = express();
 app.set("view engine", "ejs");
@@ -65,6 +67,6 @@ const renderElmApp = (bundleFile, url) =>
     }, 1);
   });
 
-app.listen(8080, () =>
-  console.log("projectname listening on port http://localhost:8080")
+app.listen(PORT, '0.0.0.0', () =>
+  console.log(`projectname listening on port http://localhost:${PORT}`)
 );
