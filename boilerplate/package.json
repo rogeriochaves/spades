@@ -6,12 +6,12 @@
   "scripts": {
     "start": "node server.js",
     "start:prod": "NODE_ENV=production node server.js",
-    "build": "webpack --mode=production --progress --json > build/stats.json"
+    "build": "mkdir build && webpack --mode=production --progress --json > build/stats.json"
   },
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "elm-webpack-loader": "git+https://github.com/xtian/elm-webpack-loader.git#0.19",
+    "elm-webpack-loader": "^5.0.0",
     "webpack": "^4.17.0",
     "webpack-cli": "^3.1.0",
     "webpack-dev-middleware": "^3.1.3"
