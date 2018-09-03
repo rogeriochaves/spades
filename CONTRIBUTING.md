@@ -34,7 +34,7 @@ The unit tests test individual functions and files, while the functional tests a
 
 Spades is basically split in three parts: the **boilerplate**, the **templates** and the **transformers**.
 
-The **boilerplate** is the base application that is generated with the `elm generate app` command, it is fully-working a standalone aplication, which means that you can run it separelety if you wish to make changes to it.
+The **boilerplate** is the base application that is generated with the `elm-generate app` command, it is fully-working a standalone aplication, which means that you can run it separelety if you wish to make changes to it.
 
 To run the boilerplate:
 

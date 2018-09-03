@@ -10,7 +10,7 @@ It has a CLI generating all the necessary Elm boilerplate when adding new compon
 
 ```
 npm -g install git+https://github.com/rogeriochaves/spades.git
-elm generate app MyProject
+elm-generate app MyProject
 ```
 
 ## Generators
@@ -18,7 +18,7 @@ elm generate app MyProject
 ### Add new component
 
 ```
-elm generate component Search
+elm-generate component Search
 ```
 
 This is the coolest generator, it will create a Search
@@ -27,7 +27,7 @@ component under `src/`, update the main Model, Msg, Update, View and Routes for 
 ### Add new route
 
 ```
-elm generate route Contact
+elm-generate route Contact
 ```
 
 This will create a new Page type, route parser and route toPath case on the `src/Router/Routes.elm` file
@@ -69,7 +69,7 @@ Read more: https://medium.com/walmartlabs/the-benefits-of-server-side-rendering-
 You can disable this option using the `--serverless` flag while creating your project:
 
 ```
-elm generate app MyProject --serverless
+elm-generate app MyProject --serverless
 ```
 
 ## The best layout system you will ever use
