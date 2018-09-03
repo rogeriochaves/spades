@@ -19,8 +19,8 @@
   "dependencies": {
     "commander": "^2.15.1",
     "ejs": "^2.6.1",
-    "elm": "^0.18.0",
-    "elm-format": "^0.6.1-alpha",
+    "elm": "^0.19.0-bugfix2",
+    "elm-format": "^0.8.0",
     "jsdom": "^11.11.0",
     "ncp": "^2.0.0"
   },
