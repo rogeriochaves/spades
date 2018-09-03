@@ -26,3 +26,12 @@ test(
       }),
   ONE_MINUTE
 );
+
+test(
+  "runs a code generator and builds the app",
+  () =>
+    run("cd temp/myapp && elm-generate component Search")().then(
+      run("cd temp/myapp && npm install && npm install && npm run build")
+    ),
+  ONE_MINUTE * 3
+);

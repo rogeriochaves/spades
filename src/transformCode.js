@@ -21,7 +21,10 @@ const namedTransformation = (filePath, transformer) => name =>
       }
       console.log(`Updated ${filePath} file`);
     })
-    .catch(err => console.error(err));
+    .catch(err => {
+      console.error(err);
+      process.exit(1);
+    });
 
 const executeTransformation = flags =>
   new Promise((resolve, reject) => {
