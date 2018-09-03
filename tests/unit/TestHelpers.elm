@@ -1,12 +1,12 @@
 module TestHelpers exposing (..)
 
 import Elm.Syntax.Declaration exposing (..)
-import Elm.Syntax.Ranged exposing (..)
+import Elm.Syntax.Node exposing (..)
 import Regex exposing (..)
 import Transformers.Helpers exposing (..)
 
 
-applyTransformer : (Ranged Declaration -> Ranged Declaration) -> String -> Result (List String) String
+applyTransformer : (Node Declaration -> Node Declaration) -> String -> Result (List String) String
 applyTransformer transformer string =
     stringToFile string
         |> Result.map (updateFileDeclarations transformer >> fileToString >> clearWhitespace)

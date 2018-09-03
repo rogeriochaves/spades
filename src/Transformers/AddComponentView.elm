@@ -1,11 +1,11 @@
-module Transformers.AddComponentView exposing (..)
+module Transformers.AddComponentView exposing (addImportView, addRenderRoute, transform)
 
 import Elm.Syntax.Declaration exposing (..)
 import Elm.Syntax.Expression exposing (..)
 import Elm.Syntax.File exposing (..)
+import Elm.Syntax.Node exposing (..)
 import Elm.Syntax.Pattern exposing (..)
 import Elm.Syntax.Range exposing (..)
-import Elm.Syntax.Ranged exposing (..)
 import Transformers.Helpers exposing (..)
 
 
@@ -20,13 +20,10 @@ transform name code =
                 |> Ok
 
         Err errors ->
-            Err
-                ("Error parsing file:\n"
-                    ++ String.join "\n" errors
-                )
+            Err ("Error parsing file:\n" ++ errors)
 
 
-addRenderRoute : String -> Ranged Declaration -> Ranged Declaration
+addRenderRoute : String -> Node Declaration -> Node Declaration
 addRenderRoute name =
     let
         newCase : Case
@@ -34,14 +31,17 @@ addRenderRoute name =
             ( ranged <| NamedPattern (QualifiedNameRef [] (name ++ "Page")) []
             , ranged <|
                 Application
-                    [ ranged <| QualifiedExpr [ "Element" ] "map"
-                    , ranged <| FunctionOrValue ("MsgFor" ++ name)
+                    [ ranged <| FunctionOrValue [ "Element" ] "map"
+                    , ranged <| FunctionOrValue [] ("MsgFor" ++ name)
                     , ranged <|
                         ParenthesizedExpression
                             (ranged <|
                                 Application
-                                    [ ranged <| QualifiedExpr [ name, "View" ] "view"
-                                    , ranged <| RecordAccess (ranged <| FunctionOrValue "model") (String.toLower name)
+                                    [ ranged <| FunctionOrValue [ name, "View" ] "view"
+                                    , ranged <|
+                                        RecordAccess
+                                            (ranged <| FunctionOrValue [] "model")
+                                            (ranged <| String.toLower name)
                                     ]
                             )
                     ]
@@ -54,8 +54,7 @@ addRenderRoute name =
 addImportView : String -> File -> File
 addImportView name =
     addImport
-        { moduleName = [ name, "View" ]
+        { moduleName = ranged [ name, "View" ]
         , moduleAlias = Nothing
         , exposingList = Nothing
-        , range = emptyRange
         }

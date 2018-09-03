@@ -1,10 +1,10 @@
-module Transformers.AddComponentUpdate exposing (..)
+module Transformers.AddComponentUpdate exposing (addImportUpdate, addInitMap, addUpdateMap, transform)
 
 import Elm.Syntax.Declaration exposing (..)
 import Elm.Syntax.Expression exposing (..)
 import Elm.Syntax.File exposing (..)
+import Elm.Syntax.Node exposing (..)
 import Elm.Syntax.Range exposing (..)
-import Elm.Syntax.Ranged exposing (..)
 import Transformers.Helpers exposing (..)
 
 
@@ -20,45 +20,42 @@ transform name code =
                 |> Ok
 
         Err errors ->
-            Err
-                ("Error parsing file:\n"
-                    ++ String.join "\n" errors
-                )
+            Err ("Error parsing file:\n" ++ errors)
 
 
-addInitMap : String -> Ranged Declaration -> Ranged Declaration
+addInitMap : String -> Node Declaration -> Node Declaration
 addInitMap name =
     let
         newInitMap =
             ranged <|
                 Application
-                    [ ranged <| FunctionOrValue "andMapCmd"
-                    , ranged <| FunctionOrValue ("MsgFor" ++ name)
-                    , ranged <| QualifiedExpr [ name, "Update" ] "init"
+                    [ ranged <| FunctionOrValue [] "andMapCmd"
+                    , ranged <| FunctionOrValue [] ("MsgFor" ++ name)
+                    , ranged <| FunctionOrValue [ name, "Update" ] "init"
                     ]
     in
     updateFunctionBody "init"
         (addToLastRightPipe newInitMap)
 
 
-addUpdateMap : String -> Ranged Declaration -> Ranged Declaration
+addUpdateMap : String -> Node Declaration -> Node Declaration
 addUpdateMap name =
     let
         newUpdateMap =
             ranged <|
                 Application
-                    [ ranged <| FunctionOrValue "andMapCmd"
-                    , ranged <| FunctionOrValue ("MsgFor" ++ name)
+                    [ ranged <| FunctionOrValue [] "andMapCmd"
+                    , ranged <| FunctionOrValue [] ("MsgFor" ++ name)
                     , ranged <|
                         ParenthesizedExpression
                             (ranged <|
                                 Application
-                                    [ ranged <| QualifiedExpr [ name, "Update" ] "update"
-                                    , ranged <| FunctionOrValue "msg"
+                                    [ ranged <| FunctionOrValue [ name, "Update" ] "update"
+                                    , ranged <| FunctionOrValue [] "msg"
                                     , ranged <|
                                         RecordAccess
-                                            (ranged <| FunctionOrValue "model")
-                                            (String.toLower name)
+                                            (ranged <| FunctionOrValue [] "model")
+                                            (ranged <| String.toLower name)
                                     ]
                             )
                     ]
@@ -70,8 +67,7 @@ addUpdateMap name =
 addImportUpdate : String -> File -> File
 addImportUpdate name =
     addImport
-        { moduleName = [ name, "Update" ]
+        { moduleName = ranged [ name, "Update" ]
         , moduleAlias = Nothing
         , exposingList = Nothing
-        , range = emptyRange
         }
