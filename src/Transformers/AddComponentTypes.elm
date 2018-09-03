@@ -1,9 +1,9 @@
-module Transformers.AddComponentTypes exposing (..)
+module Transformers.AddComponentTypes exposing (addImportTypes, addMsgType, addNewModel, transform)
 
 import Elm.Syntax.Declaration exposing (..)
 import Elm.Syntax.File exposing (..)
+import Elm.Syntax.Node exposing (..)
 import Elm.Syntax.Range exposing (..)
-import Elm.Syntax.Ranged exposing (..)
 import Elm.Syntax.Type exposing (..)
 import Elm.Syntax.TypeAnnotation exposing (..)
 import Transformers.Helpers exposing (..)
@@ -21,39 +21,35 @@ transform name code =
                 |> Ok
 
         Err errors ->
-            Err
-                ("Error parsing file:\n"
-                    ++ String.join "\n" errors
-                )
+            Err ("Error parsing file:\n" ++ errors)
 
 
 addImportTypes : String -> File -> File
 addImportTypes name =
     addImport
-        { moduleName = [ name, "Types" ]
+        { moduleName = ranged [ name, "Types" ]
         , moduleAlias = Nothing
         , exposingList = Nothing
-        , range = emptyRange
         }
 
 
-addNewModel : String -> Ranged Declaration -> Ranged Declaration
+addNewModel : String -> Node Declaration -> Node Declaration
 addNewModel name =
     let
         newField : RecordField
         newField =
-            ( String.toLower name
-            , ranged <| Typed [ name, "Types" ] "Model" []
+            ( ranged <| String.toLower name
+            , namespaced [ name, "Types" ] "Model" []
             )
     in
     updateTypeAliasDefinition "Model"
         (addFieldToRecordDefinition newField)
 
 
-addMsgType : String -> Ranged Declaration -> Ranged Declaration
+addMsgType : String -> Node Declaration -> Node Declaration
 addMsgType name =
     addNewUnionType "Msg"
-        (ValueConstructor ("MsgFor" ++ name)
-            [ ranged <| Typed [ name, "Types" ] "Msg" [] ]
-            emptyRange
+        (ValueConstructor
+            (ranged <| "MsgFor" ++ name)
+            [ namespaced [ name, "Types" ] "Msg" [] ]
         )

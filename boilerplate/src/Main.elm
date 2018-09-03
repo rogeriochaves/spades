@@ -11,10 +11,11 @@ import View exposing (view)
 
 main : Program () Model Msg
 main =
-    Browser.fullscreen
+    Browser.application
         { init = init
-        , update = update
         , view = view
-        , onNavigation = Just (MsgForRouter << Router.Types.OnNavigation)
+        , update = update
         , subscriptions = always Sub.none
+        , onUrlChange = MsgForRouter << Router.Types.OnUrlChange
+        , onUrlRequest = MsgForRouter << Router.Types.OnUrlRequest
         }

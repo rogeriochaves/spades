@@ -1,5 +1,6 @@
-port module Main exposing (..)
+port module Main exposing (Flags, init, main, onError, onSuccess)
 
+import Browser
 import Html exposing (..)
 import Transformers.AddComponentTypes as AddComponentTypes
 import Transformers.AddComponentUpdate as AddComponentUpdate
@@ -41,7 +42,7 @@ init { transformer, args, code } =
 
 main : Program Flags () msg
 main =
-    Html.programWithFlags
+    Browser.element
         { init = init
         , update = always <| always ( (), Cmd.none )
         , view = always <| text ""

@@ -1,8 +1,8 @@
-module Counter.Update exposing (..)
+module Counter.Update exposing (init, update)
 
 import Counter.Types exposing (..)
-import Helpers.Return exposing (Return, return)
 import RemoteData exposing (..)
+import Return exposing (Return, return)
 import Types
 
 

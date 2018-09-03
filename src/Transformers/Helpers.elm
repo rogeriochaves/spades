@@ -1,23 +1,26 @@
-module Transformers.Helpers exposing (..)
+module Transformers.Helpers exposing (addCaseBranch, addFieldToRecordDefinition, addImport, addNewUnionType, addToLastRightPipe, fileToString, namespaced, ranged, stringToFile, unranged, updateFileDeclarations, updateFunctionBody, updateTypeAliasDefinition)
 
 import Elm.Parser as Parser
 import Elm.Processing as Processing
 import Elm.Syntax.Declaration exposing (..)
 import Elm.Syntax.Expression exposing (..)
 import Elm.Syntax.File exposing (..)
+import Elm.Syntax.Import exposing (..)
 import Elm.Syntax.Infix exposing (..)
 import Elm.Syntax.Module exposing (..)
+import Elm.Syntax.Node exposing (..)
 import Elm.Syntax.Range exposing (..)
-import Elm.Syntax.Ranged exposing (..)
 import Elm.Syntax.Type exposing (..)
 import Elm.Syntax.TypeAnnotation exposing (..)
 import Elm.Writer as Writer
+import Parser exposing (deadEndsToString)
 
 
-stringToFile : String -> Result (List String) File
+stringToFile : String -> Result String File
 stringToFile string =
     Parser.parse string
         |> Result.map (Processing.process Processing.init)
+        |> Result.mapError deadEndsToString
 
 
 fileToString : File -> String
@@ -26,104 +29,127 @@ fileToString file =
         |> Writer.write
 
 
-updateFileDeclarations : (Ranged Declaration -> Ranged Declaration) -> File -> File
+updateFileDeclarations : (Node Declaration -> Node Declaration) -> File -> File
 updateFileDeclarations fn file =
     { file | declarations = List.map fn file.declarations }
 
 
-ranged : a -> Ranged a
+ranged : a -> Node a
 ranged thing =
-    ( emptyRange, thing )
+    Node emptyRange thing
 
 
-addNewUnionType : String -> ValueConstructor -> Ranged Declaration -> Ranged Declaration
-addNewUnionType typeName newType ( range, declaration ) =
+unranged : Node a -> a
+unranged node =
+    case node of
+        Node _ thing ->
+            thing
+
+
+namespaced path fnName args =
+    ranged <| Typed (ranged ( path, fnName )) args
+
+
+addNewUnionType : String -> ValueConstructor -> Node Declaration -> Node Declaration
+addNewUnionType typeName newType (Node range declaration) =
     case declaration of
-        TypeDecl type_ ->
-            if type_.name == typeName then
-                ( range, TypeDecl { type_ | constructors = type_.constructors ++ [ newType ] } )
+        CustomTypeDeclaration type_ ->
+            if unranged type_.name == typeName then
+                Node range (CustomTypeDeclaration { type_ | constructors = type_.constructors ++ [ ranged newType ] })
+
             else
-                ( range, declaration )
+                Node range declaration
 
         _ ->
-            ( range, declaration )
+            Node range declaration
 
 
-addCaseBranch : Case -> Ranged Expression -> Ranged Expression
+addCaseBranch : Case -> Node Expression -> Node Expression
 addCaseBranch newCase expression =
     case expression of
-        ( range, CaseExpression caseExpression ) ->
-            ( range, CaseExpression { caseExpression | cases = caseExpression.cases ++ [ newCase ] } )
+        Node range (CaseExpression caseExpression) ->
+            Node range (CaseExpression { caseExpression | cases = caseExpression.cases ++ [ newCase ] })
 
         _ ->
             expression
 
 
-addFieldToRecordDefinition : RecordField -> Ranged TypeAnnotation -> Ranged TypeAnnotation
+addFieldToRecordDefinition : RecordField -> Node TypeAnnotation -> Node TypeAnnotation
 addFieldToRecordDefinition newField typeAnnotation =
     case typeAnnotation of
-        ( range, Record recordFields ) ->
-            ( range, Record (recordFields ++ [ newField ]) )
+        Node range (Record recordFields) ->
+            Node range (Record (recordFields ++ [ ranged newField ]))
 
         _ ->
             typeAnnotation
 
 
-updateFunctionBody : String -> (Ranged Expression -> Ranged Expression) -> Ranged Declaration -> Ranged Declaration
-updateFunctionBody functionName fn ( range, declaration ) =
+updateFunctionBody : String -> (Node Expression -> Node Expression) -> Node Declaration -> Node Declaration
+updateFunctionBody expectedName fn (Node range declaration) =
     case declaration of
-        FuncDecl function ->
+        FunctionDeclaration function ->
             let
-                body : FunctionDeclaration
+                body : FunctionImplementation
                 body =
-                    function.declaration
+                    unranged function.declaration
 
-                newExpression : Ranged Expression
-                newExpression =
-                    fn body.expression
+                updateDeclaration : Node FunctionImplementation
+                updateDeclaration =
+                    case function.declaration of
+                        Node range_ _ ->
+                            Node range_ { body | expression = fn body.expression }
+
+                functionName : String
+                functionName =
+                    function.declaration
+                        |> unranged
+                        |> .name
+                        |> unranged
             in
-            if function.declaration.name.value == functionName then
-                ( range, FuncDecl { function | declaration = { body | expression = newExpression } } )
+            if functionName == expectedName then
+                Node range (FunctionDeclaration { function | declaration = updateDeclaration })
+
             else
-                ( range, declaration )
+                Node range declaration
 
         _ ->
-            ( range, declaration )
+            Node range declaration
 
 
-updateTypeAliasDefinition : String -> (Ranged TypeAnnotation -> Ranged TypeAnnotation) -> Ranged Declaration -> Ranged Declaration
-updateTypeAliasDefinition typeAliasName fn ( range, declaration ) =
+updateTypeAliasDefinition : String -> (Node TypeAnnotation -> Node TypeAnnotation) -> Node Declaration -> Node Declaration
+updateTypeAliasDefinition typeAliasName fn (Node range declaration) =
     case declaration of
-        AliasDecl typeAlias ->
+        AliasDeclaration typeAlias ->
             let
-                newTypeAnnotation : Ranged TypeAnnotation
+                newTypeAnnotation : Node TypeAnnotation
                 newTypeAnnotation =
                     fn typeAlias.typeAnnotation
             in
-            if typeAlias.name == typeAliasName then
-                ( range, AliasDecl { typeAlias | typeAnnotation = newTypeAnnotation } )
+            if unranged typeAlias.name == typeAliasName then
+                Node range (AliasDeclaration { typeAlias | typeAnnotation = newTypeAnnotation })
+
             else
-                ( range, declaration )
+                Node range declaration
 
         _ ->
-            ( range, declaration )
+            Node range declaration
 
 
 addImport : Import -> File -> File
 addImport newImport file =
-    { file | imports = file.imports ++ [ newImport ] }
+    { file | imports = file.imports ++ [ ranged newImport ] }
 
 
-addToLastRightPipe : Ranged Expression -> Ranged Expression -> Ranged Expression
+addToLastRightPipe : Node Expression -> Node Expression -> Node Expression
 addToLastRightPipe extraExpr expr =
     case expr of
-        ( range, OperatorApplication "|>" Left rightExpr leftExpr ) ->
-            ( range
-            , OperatorApplication "|>"
-                Left
-                rightExpr
-                (addToLastRightPipe extraExpr leftExpr)
-            )
+        Node range (OperatorApplication "|>" Left rightExpr leftExpr) ->
+            Node range
+                (OperatorApplication "|>"
+                    Left
+                    rightExpr
+                    (addToLastRightPipe extraExpr leftExpr)
+                )
 
-        _ ->
-            ranged <| OperatorApplication "|>" Left expr extraExpr
+        Node range _ ->
+            Node range (OperatorApplication "|>" Left expr extraExpr)

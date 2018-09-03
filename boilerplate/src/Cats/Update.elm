@@ -1,9 +1,9 @@
-module Cats.Update exposing (..)
+module Cats.Update exposing (init, update)
 
 import Cats.Data exposing (..)
 import Cats.Types exposing (..)
-import Helpers.Return exposing (Return, return)
 import RemoteData exposing (..)
+import Return exposing (Return, return)
 import Types
 
 

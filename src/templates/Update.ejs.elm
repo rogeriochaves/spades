@@ -1,7 +1,7 @@
 module <%= name %>.Update exposing (..)
 
 import <%= name %>.Types exposing (..)
-import Helpers.Return exposing (Return, return)
+import Return exposing (Return, return)
 import Types
 
 
