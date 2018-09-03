@@ -1,4 +1,4 @@
-module TestHelpers exposing (..)
+module TestHelpers exposing (applyTransformer, clearWhitespace, replaceAll)
 
 import Elm.Syntax.Declaration exposing (..)
 import Elm.Syntax.Node exposing (..)
@@ -6,7 +6,7 @@ import Regex exposing (..)
 import Transformers.Helpers exposing (..)
 
 
-applyTransformer : (Node Declaration -> Node Declaration) -> String -> Result (List String) String
+applyTransformer : (Node Declaration -> Node Declaration) -> String -> Result String String
 applyTransformer transformer string =
     stringToFile string
         |> Result.map (updateFileDeclarations transformer >> fileToString >> clearWhitespace)
@@ -14,14 +14,24 @@ applyTransformer transformer string =
 
 clearWhitespace : String -> String
 clearWhitespace =
-    replace All (regex "\\s+module") (\_ -> "module")
-        >> replace All (regex "\\s+") (\_ -> " ")
-        >> replace All (regex "= ") (\_ -> "=")
-        >> replace All (regex "\\[ ") (\_ -> "[")
-        >> replace All (regex " \\]") (\_ -> "]")
-        >> replace All (regex "\\{ ") (\_ -> "{")
-        >> replace All (regex " \\}") (\_ -> "}")
-        >> replace All (regex " ,") (\_ -> ",")
-        >> replace All (regex "\\| ") (\_ -> "|")
-        >> replace All (regex " \\(\\.\\.\\)") (\_ -> "(..)")
-        >> replace All (regex " $") (\_ -> "")
+    replaceAll "\\s+module" (\_ -> "module")
+        >> replaceAll "\\s+" (\_ -> " ")
+        >> replaceAll "= " (\_ -> "=")
+        >> replaceAll "\\[ " (\_ -> "[")
+        >> replaceAll " \\]" (\_ -> "]")
+        >> replaceAll "\\{ " (\_ -> "{")
+        >> replaceAll " \\}" (\_ -> "}")
+        >> replaceAll " ," (\_ -> ",")
+        >> replaceAll "\\| " (\_ -> "|")
+        >> replaceAll " \\(\\.\\.\\)" (\_ -> "(..)")
+        >> replaceAll " $" (\_ -> "")
+
+
+replaceAll : String -> (Regex.Match -> String) -> String -> String
+replaceAll userRegex replacer string =
+    case Regex.fromString userRegex of
+        Nothing ->
+            string
+
+        Just regex ->
+            Regex.replace regex replacer string

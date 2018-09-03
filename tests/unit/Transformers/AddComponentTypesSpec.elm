@@ -1,4 +1,4 @@
-module Transformers.AddComponentTypesSpec exposing (..)
+module Transformers.AddComponentTypesSpec exposing (fixtureFileHeaderAfter, fixtureFileHeaderBefore, fixtureModelAfter, fixtureModelBefore, fixtureMsgsAfter, fixtureMsgsBefore, suite)
 
 import Expect exposing (Expectation)
 import Test exposing (..)

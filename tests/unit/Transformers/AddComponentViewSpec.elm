@@ -1,4 +1,4 @@
-module Transformers.AddComponentViewSpec exposing (..)
+module Transformers.AddComponentViewSpec exposing (fixtureFileHeaderAfter, fixtureFileHeaderBefore, fixtureRenderRouteAfter, fixtureRenderRouteBefore, fixtureSomeOtherCase, suite)
 
 import Expect exposing (Expectation)
 import Test exposing (..)
