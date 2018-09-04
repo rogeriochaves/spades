@@ -1,18 +1,17 @@
-module Counter.View exposing (..)
+module Counter.View exposing (view)
 
 import Counter.Types exposing (..)
 import Element exposing (..)
-import Element.Attributes exposing (..)
 import Element.Events exposing (..)
+import Element.Input exposing (button)
 import RemoteData exposing (..)
-import Styles exposing (..)
+import Styles
 
 
-view : Model -> Element Styles variation Msg
+view : Model -> Element Msg
 view model =
-    row NoStyle
-        [ verticalCenter, spacing 5 ]
-        [ button NoStyle [ padding 5, onClick Decrement ] (text "-")
+    row [ centerY, spacing 5 ]
+        [ button ([ padding 5 ] ++ Styles.button) { onPress = Just Decrement, label = text "-" }
         , text (String.fromInt model)
-        , button NoStyle [ padding 5, onClick Increment ] (text "+")
+        , button ([ padding 5 ] ++ Styles.button) { onPress = Just Increment, label = text "+" }
         ]

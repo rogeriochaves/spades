@@ -4,11 +4,12 @@ import Browser
 import Cats.View
 import Counter.View
 import Element exposing (..)
-import Element.Attributes exposing (..)
 import Element.Events exposing (..)
+import Element.Input exposing (button)
+import Element.Region exposing (..)
 import Router.Routes exposing (..)
 import Router.Types exposing (Msg(..))
-import Styles exposing (..)
+import Styles
 import Types exposing (..)
 
 
@@ -16,23 +17,22 @@ view : Model -> Browser.Document Types.Msg
 view model =
     { title = "projectname"
     , body =
-        [ Element.layout stylesheet <|
-            el NoStyle [ width (px 800) ] (renderRoute model)
+        [ Element.layout [] <|
+            el [ width (px 800), centerX ] (renderRoute model)
         ]
     }
 
 
-renderRoute : Model -> Element Styles variation Types.Msg
+renderRoute : Model -> Element Types.Msg
 renderRoute model =
     case model.router.page of
         Home ->
-            column NoStyle
+            column
                 [ spacing 5 ]
-                [ h1 Title [] (text "Welcome")
-                , row NoStyle
-                    [ spacing 5 ]
-                    [ button NoStyle [ padding 5, onClick (MsgForRouter <| Go CatsPage) ] (text "Go to Cats")
-                    , button NoStyle [ padding 5, onClick (MsgForRouter <| Go CounterPage) ] (text "Go to Counter")
+                [ el ([ heading 1 ] ++ Styles.title) (text "Welcome")
+                , row [ spacing 5 ]
+                    [ button ([ padding 5 ] ++ Styles.button) { onPress = Just (MsgForRouter <| Go CatsPage), label = text "Go to Cats" }
+                    , button ([ padding 5 ] ++ Styles.button) { onPress = Just (MsgForRouter <| Go CounterPage), label = text "Go to Counter" }
                     ]
                 ]
 
