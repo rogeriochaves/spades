@@ -31,8 +31,8 @@ renderRoute model =
                 [ spacing 5 ]
                 [ el ([ heading 1 ] ++ Styles.title) (text "Welcome")
                 , row [ spacing 5 ]
-                    [ button ([ padding 5 ] ++ Styles.button) { onPress = Just (MsgForRouter <| Go CatsPage), label = text "Go to Cats" }
-                    , button ([ padding 5 ] ++ Styles.button) { onPress = Just (MsgForRouter <| Go CounterPage), label = text "Go to Counter" }
+                    [ link ([ padding 5 ] ++ Styles.button) { url = toPath CatsPage, label = text "Go to Cats" }
+                    , link ([ padding 5 ] ++ Styles.button) { url = toPath CounterPage, label = text "Go to Counter" }
                     ]
                 ]
 
