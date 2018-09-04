@@ -5,16 +5,15 @@
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server --mode=development --hot --open",
-    "build": "webpack --mode=production --progress",
-    "install": "cp ./bin/elm19-osx ./node_modules/.bin/elm"
+    "build": "webpack --mode=production --progress"
   },
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "elm-webpack-loader": "git+https://github.com/xtian/elm-webpack-loader.git#0.19",
+    "elm-webpack-loader": "^5.0.0",
     "html-webpack-plugin": "^3.2.0",
-    "webpack": "^4.11.1",
-    "webpack-cli": "^3.0.3",
+    "webpack": "^4.17.0",
+    "webpack-cli": "^3.1.0",
     "webpack-dev-server": "^3.1.4"
   }
 }

@@ -16,6 +16,7 @@ test(
           .toString("utf-8")
           .split("\n");
         ignoredFiles.push(".gitignore.template");
+        ignoredFiles.push(".DS_Store");
 
         let boilerplateFiles = fs
           .readdirSync("boilerplate")
