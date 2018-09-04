@@ -74,13 +74,15 @@ elm-generate app MyProject --serverless
 
 ## The best layout system you will ever use
 
-Thanks to Elm awesome type system and abstraction of the HTML the community could see things more clearly, and came up with a better way of layouting: style-elements
+Thanks to Elm awesome type system and abstraction of the HTML the community could see things more clearly, and came up with a better way of layouting: elm-ui
 
-We recommend watching this talk by Matthew Griffith, the creator of style-elements, to understant how it works:
+We recommend watching this talk by Matthew Griffith, the creator of elm-ui, to understant how it works (elm-ui was still called style-elements back then):
 
 https://www.youtube.com/watch?v=NYb2GDWMIm0
 
-Spades comes with style-elements by default, and although you can remove it and use the standard html library, we really recommend you to give it a shot, you won't regret!
+Spades comes with elm-ui by default, and although you can remove it and use the standard html library, we really recommend you to give it a shot, you won't regret!
+
+(elm-ui was previously called style-elements, check out what changed [here](https://github.com/mdgriffith/elm-ui/blob/master/CHANGES-FROM-STYLE-ELEMENTS.md))
 
 ## Other Batteries Included
 

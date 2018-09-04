@@ -1,19 +1,19 @@
-module Cats.View exposing (..)
+module Cats.View exposing (view)
 
 import Cats.Types exposing (..)
 import Element exposing (..)
-import Element.Attributes exposing (..)
 import Element.Events exposing (..)
+import Element.Input exposing (button)
+import Element.Region exposing (..)
 import RemoteData exposing (..)
-import Styles exposing (..)
+import Styles
 
 
-view : Model -> Element Styles variation Msg
+view : Model -> Element Msg
 view model =
-    column NoStyle
-        []
-        [ h2 Title [] (text model.topic)
-        , button NoStyle [ onClick MorePlease ] (text "More Please!")
+    column [ spacing 5 ]
+        [ el ([ heading 2 ] ++ Styles.title) (text model.topic)
+        , button ([ padding 5 ] ++ Styles.button) { onPress = Just MorePlease, label = text "More Please!" }
         , case model.gifUrl of
             NotAsked ->
                 text ""
@@ -22,7 +22,7 @@ view model =
                 text "Loading..."
 
             Success gifUrl ->
-                image NoStyle [] { src = gifUrl, caption = "a random " ++ model.topic ++ " gif" }
+                image [] { src = gifUrl, description = "a random " ++ model.topic ++ " gif" }
 
             Failure _ ->
                 text "Error loading gif"
