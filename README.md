@@ -36,7 +36,7 @@ This will create a new Page type, route parser and route toPath case on the `src
 
 # Advantages
 
-## Does Elm needs a framework?
+## Does Elm need a framework?
 
 Mostly not, at least much less than other programming languages, because Elm is already very focused on being the best language for frontend web development, has an [enforced architecture](https://guide.elm-lang.org/architecture/) and a lot of batteries included.
 
