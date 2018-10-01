@@ -1,3 +1,4 @@
+const path = require("path");
 const args = require('yargs').argv;
 const webpack = require("webpack");
 const express = require("express");
@@ -35,19 +36,19 @@ app.use((req, res, next) => {
 });
 
 const getBundle = res => {
-  let path;
+  let bundlePath;
   let file;
   if (process.env.NODE_ENV === "production") {
-    path = require("./build/stats.json").assetsByChunkName.main;
-    file = fs.readFileSync(`./build/${path}`, "utf8");
+    bundlePath = require("./build/stats.json").assetsByChunkName.main;
+    file = fs.readFileSync(`./build/${bundlePath}`, "utf8");
   } else {
-    path = res.locals.webpackStats.toJson().assetsByChunkName.main;
-    file = webpackMiddleware.fileSystem.readFileSync(
-      `/${process.cwd()}/build/${path}`,
+    bundlePath = res.locals.webpackStats.toJson().assetsByChunkName.main;
+    file = webpackMiddleware.fileSystem.readFileSync,
+      path.join(process.cwd(), "build", bundlePath),
       "utf8"
     );
   }
-  return { path, file };
+  return { path: bundlePath, file };
 };
 
 const renderElmApp = (bundleFile, url) =>
