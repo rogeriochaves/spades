@@ -43,7 +43,7 @@ const getBundle = res => {
     file = fs.readFileSync(`./build/${bundlePath}`, "utf8");
   } else {
     bundlePath = res.locals.webpackStats.toJson().assetsByChunkName.main;
-    file = webpackMiddleware.fileSystem.readFileSync,
+    file = webpackMiddleware.fileSystem.readFileSync(
       path.join(process.cwd(), "build", bundlePath),
       "utf8"
     );
