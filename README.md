@@ -87,6 +87,7 @@ Spades comes with elm-ui by default, and although you can remove it and use the 
 Aside from the advantaged mentioned above, Spades also comes with:
 
 - Ready for Elm 0.19
+- [elm-test](https://package.elm-lang.org/packages/elm-explorations/test)
 - [Routing and Navigation](https://www.elm-tutorial.org/en/07-routing/cover.html)
 - [Webpack](https://webpack.js.org/) for better development experience and optimized build
 - [RemoteData](http://package.elm-lang.org/packages/krisajenkins/remotedata/latest/RemoteData) for better handling of http request
