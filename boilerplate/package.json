@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node server.js",
     "start:prod": "NODE_ENV=production node server.js",
-    "build": "mkdir -p build && webpack --mode=production --progress --json > build/stats.json"
+    "build": "mkdir -p build && webpack --mode=production --progress --json > build/stats.json",
+    "test": "elm-test"
   },
   "author": "",
   "license": "MIT",
