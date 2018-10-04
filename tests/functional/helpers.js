@@ -4,7 +4,7 @@ const exec = promisify(require("child_process").exec);
 const debug = require("debug");
 const debugRunning = debug("running");
 
-const run = command => () => {
+const run = command => {
   debugRunning(command);
   return exec(command, { maxBuffer: 1024 * 500 });
 };
