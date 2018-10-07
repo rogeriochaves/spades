@@ -2,6 +2,7 @@ const fs = require("fs");
 const { promisify } = require("util");
 const ncp = promisify(require("ncp").ncp);
 const path = require("path");
+const replaceInFiles = require('replace-in-files');
 
 module.exports = (name, cmd) => {
   fs.mkdirSync(name);
@@ -21,6 +22,10 @@ module.exports = (name, cmd) => {
     );
 
     if (cmd.serverless) serverlessPackage(name)
+    
+    console.log(replaceInFiles(
+      {files: name, from: "projectname", to: name}
+    ))
 
     console.log(
       "Your app is ready! Now run the following commands to get started:\n"
