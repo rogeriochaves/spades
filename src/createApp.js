@@ -3,6 +3,7 @@ const { promisify } = require("util");
 const ncp = promisify(require("ncp").ncp);
 const path = require("path");
 const replaceInFiles = require("replace-in-files");
+const exec = promisify(require("child_process").exec);
 
 module.exports = (name, cmd) => {
   fs.mkdirSync(name);
@@ -24,6 +25,7 @@ module.exports = (name, cmd) => {
     if (cmd.serverless) serverlessPackage(name);
 
     replaceProjectname(name);
+    initializeGit(name);
 
     console.log(
       "Your app is ready! Now run the following commands to get started:\n"
@@ -70,5 +72,15 @@ async function replaceProjectname(name) {
       "Please open an issue on https://github.com/rogeriochaves/spades/issues"
     );
     console.error(error);
+  }
+}
+
+async function initializeGit(name) {
+  try {
+    await exec(
+      `cd ${name} && git init . && git add -A && git commit -m "Project created with Spades"`
+    );
+  } catch (error) {
+    console.log("Skipping git initialization due to error:", error);
   }
 }

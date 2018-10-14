@@ -22,7 +22,7 @@ test(
     let boilerplateFiles = fs
       .readdirSync("boilerplate")
       .filter(folder => !ignoredFiles.includes(folder));
-    boilerplateFiles = [".gitignore", ...boilerplateFiles];
+    boilerplateFiles = [".git", ".gitignore", ...boilerplateFiles];
 
     expect(newAppFiles).toEqual(boilerplateFiles);
   },
