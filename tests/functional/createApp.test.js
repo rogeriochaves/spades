@@ -47,3 +47,13 @@ test(
   },
   ONE_MINUTE * 3
 );
+
+test(
+  "replaces <projectname> with <myapp>",
+  async () => {
+    const read = fs.readFileSync;
+    expect(read("./temp/myapp/package.json", "utf8")).toMatch(/myapp/);
+    expect(read("./temp/myapp/src/index.ejs", "utf8")).toMatch(/myapp/);
+  },
+  ONE_MINUTE * 3
+);

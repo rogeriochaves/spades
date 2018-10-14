@@ -2,7 +2,7 @@ const fs = require("fs");
 const { promisify } = require("util");
 const ncp = promisify(require("ncp").ncp);
 const path = require("path");
-const replaceInFiles = require('replace-in-files');
+const replaceInFiles = require("replace-in-files");
 
 module.exports = (name, cmd) => {
   fs.mkdirSync(name);
@@ -21,9 +21,9 @@ module.exports = (name, cmd) => {
       path.join(name, ".gitignore")
     );
 
-    if (cmd.serverless) serverlessPackage(name)
-    
-    replaceProjectname(name)
+    if (cmd.serverless) serverlessPackage(name);
+
+    replaceProjectname(name);
 
     console.log(
       "Your app is ready! Now run the following commands to get started:\n"
@@ -34,9 +34,10 @@ module.exports = (name, cmd) => {
   });
 };
 
-
-function serverlessPackage (name) {
-  const handleFileErr = err => { if (err) console.log(err) };
+function serverlessPackage(name) {
+  const handleFileErr = err => {
+    if (err) console.log(err);
+  };
 
   // delete all ssr files
   fs.unlink(path.join(name, "server.js"), handleFileErr);
@@ -46,7 +47,7 @@ function serverlessPackage (name) {
 
   fs.renameSync(
     path.join(name, "package.static.json"),
-    path.join(name, "package.json"),
+    path.join(name, "package.json")
   );
 
   fs.renameSync(
@@ -62,12 +63,12 @@ function serverlessPackage (name) {
 
 async function replaceProjectname(name) {
   try {
-    await replaceInFiles(
-      {files: name, from: "projectname", to: name}
-    )
+    await replaceInFiles({ files: name, from: "projectname", to: name });
   } catch (error) {
-    console.log("Ups, there was an error that should be impossible!")
-    console.log("Please open an issue on https://github.com/rogeriochaves/spades/issues")
-    console.error(error)
+    console.log("Ups, there was an error that should be impossible!");
+    console.log(
+      "Please open an issue on https://github.com/rogeriochaves/spades/issues"
+    );
+    console.error(error);
   }
 }
