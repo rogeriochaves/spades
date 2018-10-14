@@ -5,7 +5,7 @@ const path = require("path");
 const replaceInFiles = require("replace-in-files");
 const exec = promisify(require("child_process").exec);
 
-module.exports = (name, cmd) => {
+module.exports = async (name, cmd) => {
   fs.mkdirSync(name);
 
   const boilerplatePath = path.join(__dirname, "..", "boilerplate");
@@ -16,24 +16,24 @@ module.exports = (name, cmd) => {
   const filter = file =>
     !ignoredFiles.some(ignored => file.split("/").pop() === ignored);
 
-  ncp(boilerplatePath, name, { filter }).then(() => {
-    fs.renameSync(
-      path.join(name, ".gitignore.template"),
-      path.join(name, ".gitignore")
-    );
+  await ncp(boilerplatePath, name, { filter });
 
-    if (cmd.serverless) serverlessPackage(name);
+  fs.renameSync(
+    path.join(name, ".gitignore.template"),
+    path.join(name, ".gitignore")
+  );
 
-    replaceProjectname(name);
-    initializeGit(name);
+  if (cmd.serverless) serverlessPackage(name);
 
-    console.log(
-      "Your app is ready! Now run the following commands to get started:\n"
-    );
-    console.log(`  cd ${name}`);
-    console.log("  npm install");
-    console.log("  npm start\n");
-  });
+  await replaceProjectname(name);
+  await initializeGit(name);
+
+  console.log(
+    "Your app is ready! Now run the following commands to get started:\n"
+  );
+  console.log(`  cd ${name}`);
+  console.log("  npm install");
+  console.log("  npm start\n");
 };
 
 function serverlessPackage(name) {
