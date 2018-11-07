@@ -18,6 +18,8 @@ test(
       .split("\n");
     ignoredFiles.push(".gitignore.template");
     ignoredFiles.push(".DS_Store");
+    ignoredFiles.push("package.static.json");
+    ignoredFiles.push("webpack.config.static.js");
 
     let boilerplateFiles = fs
       .readdirSync("boilerplate")

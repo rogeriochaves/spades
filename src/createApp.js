@@ -23,7 +23,11 @@ module.exports = async (name, cmd) => {
     path.join(name, ".gitignore")
   );
 
-  if (cmd.serverless) serverlessPackage(name);
+  if (cmd.serverless) {
+    serverlessPackage(name);
+  } else {
+    removeServerlessFiles(name);
+  }
 
   await replaceProjectname(name);
   await initializeGit(name);
@@ -57,6 +61,12 @@ function serverlessPackage(name) {
     path.join(name, "src", "index.static.ejs"),
     path.join(name, "src", "index.ejs")
   );
+}
+
+function removeServerlessFiles(name) {
+  fs.unlinkSync(path.join(name, "src", "index.static.ejs"));
+  fs.unlinkSync(path.join(name, "package.static.json"));
+  fs.unlinkSync(path.join(name, "webpack.config.static.js"));
 }
 
 async function replaceProjectname(name) {
