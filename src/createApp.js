@@ -23,7 +23,11 @@ module.exports = async (name, cmd) => {
     path.join(name, ".gitignore")
   );
 
-  if (cmd.serverless) serverlessPackage(name);
+  if (cmd.serverless) {
+    serverlessPackage(name);
+  } else {
+    removeServerlessFiles(name);
+  }
 
   await replaceProjectname(name);
   await initializeGit(name);
@@ -37,15 +41,11 @@ module.exports = async (name, cmd) => {
 };
 
 function serverlessPackage(name) {
-  const handleFileErr = err => {
-    if (err) console.log(err);
-  };
-
   // delete all ssr files
-  fs.unlink(path.join(name, "server.js"), handleFileErr);
-  fs.unlink(path.join(name, "src", "index.ejs"), handleFileErr);
-  fs.unlink(path.join(name, "package.json"), handleFileErr);
-  fs.unlink(path.join(name, "webpack.config.js"), handleFileErr);
+  fs.unlinkSync(path.join(name, "server.js"));
+  fs.unlinkSync(path.join(name, "src", "index.ejs"));
+  fs.unlinkSync(path.join(name, "package.json"));
+  fs.unlinkSync(path.join(name, "webpack.config.js"));
 
   fs.renameSync(
     path.join(name, "package.static.json"),
@@ -61,6 +61,12 @@ function serverlessPackage(name) {
     path.join(name, "src", "index.static.ejs"),
     path.join(name, "src", "index.ejs")
   );
+}
+
+function removeServerlessFiles(name) {
+  fs.unlinkSync(path.join(name, "src", "index.static.ejs"));
+  fs.unlinkSync(path.join(name, "package.static.json"));
+  fs.unlinkSync(path.join(name, "webpack.config.static.js"));
 }
 
 async function replaceProjectname(name) {
