@@ -37,15 +37,11 @@ module.exports = async (name, cmd) => {
 };
 
 function serverlessPackage(name) {
-  const handleFileErr = err => {
-    if (err) console.log(err);
-  };
-
   // delete all ssr files
-  fs.unlink(path.join(name, "server.js"), handleFileErr);
-  fs.unlink(path.join(name, "src", "index.ejs"), handleFileErr);
-  fs.unlink(path.join(name, "package.json"), handleFileErr);
-  fs.unlink(path.join(name, "webpack.config.js"), handleFileErr);
+  fs.unlinkSync(path.join(name, "server.js"));
+  fs.unlinkSync(path.join(name, "src", "index.ejs"));
+  fs.unlinkSync(path.join(name, "package.json"));
+  fs.unlinkSync(path.join(name, "webpack.config.js"));
 
   fs.renameSync(
     path.join(name, "package.static.json"),
