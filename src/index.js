@@ -15,4 +15,10 @@ program.command("component-view <Name>").action(addComponentView);
 program.command("component-types <Name>").action(addComponentTypes);
 program.command("component-update <Name>").action(addComponentUpdate);
 
+program.on('command:*', () => {
+  console.error('ERROR: unrecognized command');
+  program.outputHelp();
+  process.exit(1);
+});
+
 program.parse(process.argv);
