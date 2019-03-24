@@ -1,0 +1,23 @@
+root = true
+
+[*]
+charset = utf8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.json]
+indent_style = space
+indent_size = 2
+
+[elm.json]
+indent_style = space
+indent_size = 4
+
+[*.elm]
+indent_style = space
+indent_size = 4
+
+[*.js]
+indent_style = space
+indent_size = 2
