@@ -17,7 +17,7 @@ getRandomGif topic =
     in
     Http.get
         { url = url
-        ,   expect = Http.expectJson returnMsg decodeGifUrl
+        , expect = Http.expectJson returnMsg decodeGifUrl
         }
 
 
