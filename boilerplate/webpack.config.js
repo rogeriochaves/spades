@@ -1,4 +1,4 @@
-const config = {
+const config = isDev => ({
   entry: "./src/index.js",
   output: {
     path: `${__dirname}/build`,
@@ -9,10 +9,18 @@ const config = {
       {
         test: /\.elm$/,
         exclude: [/elm-stuff/, /node_modules/],
-        use: ["elm-webpack-loader"]
+        use: [
+          {
+            loader: "elm-webpack-loader",
+            options: {
+              forceWatch: isDev,
+              debug: isDev
+            }
+          }
+        ]
       }
     ]
   }
-};
+});
 
-module.exports = config;
+module.exports = (_, argv) => config(argv.mode !== "production");
