@@ -1,5 +1,4 @@
-const isDev = process.env.NODE_ENV !== "production";
-const config = {
+const config = isDev => ({
   entry: "./src/index.js",
   output: {
     path: `${__dirname}/build`,
@@ -22,6 +21,6 @@ const config = {
       }
     ]
   }
-};
+});
 
-module.exports = config;
+module.exports = (_, argv) => config(argv.mode !== "production");

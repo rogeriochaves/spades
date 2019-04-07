@@ -15,7 +15,10 @@ app.use(express.static("build"));
 let webpackMiddleware;
 if (process.env.NODE_ENV !== "production") {
   const webpackDevMiddleware = require("webpack-dev-middleware");
-  const webpackConfig = require("./webpack.config");
+  const webpackConfig = require("./webpack.config")(
+    {},
+    { mode: "development" }
+  );
   const compiler = webpack({ ...webpackConfig, mode: "development" });
   webpackMiddleware = webpackDevMiddleware(compiler, {
     serverSideRender: true,
