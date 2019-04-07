@@ -1,3 +1,4 @@
+const isDev = process.env.NODE_ENV !== "production";
 const config = {
   entry: "./src/index.js",
   output: {
@@ -9,7 +10,15 @@ const config = {
       {
         test: /\.elm$/,
         exclude: [/elm-stuff/, /node_modules/],
-        use: ["elm-webpack-loader"]
+        use: [
+          {
+            loader: "elm-webpack-loader",
+            options: {
+              forceWatch: isDev,
+              debug: isDev
+            }
+          }
+        ]
       }
     ]
   }
