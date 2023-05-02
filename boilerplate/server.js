@@ -42,11 +42,12 @@ const getBundle = res => {
   let bundlePath;
   let file;
   if (process.env.NODE_ENV === "production") {
-    bundlePath = require("./build/stats.json").assetsByChunkName.main;
+    bundlePath = require("./build/stats.json").assetsByChunkName.main[0];
     file = fs.readFileSync(`./build/${bundlePath}`, "utf8");
   } else {
-    bundlePath = res.locals.webpackStats.toJson().assetsByChunkName.main;
-    file = webpackMiddleware.fileSystem.readFileSync(
+    bundlePath = res.locals.webpack.devMiddleware.stats.toJson().assetsByChunkName.main[0];
+
+    file = res.locals.webpack.devMiddleware.outputFileSystem.readFileSync(
       path.join(process.cwd(), "build", bundlePath),
       "utf8"
     );

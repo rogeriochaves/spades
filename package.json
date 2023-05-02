@@ -10,8 +10,8 @@
     "watch": "watch 'npm run build' src",
     "build": "elm make src/Main.elm --output out/elm.js",
     "test": "npm run test:unit && npm run test:functional",
-    "test:unit": "elm-test tests/unit",
-    "test:functional": "cross-env DEBUG=running jest tests/functional",
+    "test:unit": "elm-test",
+    "test:functional": "cross-env DEBUG=running jest tests.functional",
     "install": "npm run build"
   },
   "author": "",
@@ -28,7 +28,7 @@
   "devDependencies": {
     "cross-env": "^5.2.0",
     "debug": "^3.1.0",
-    "elm-test": "^0.19.1-revision9",
+    "elm-test": "^0.19.1-revision12",
     "fs-extra": "^10.1.0",
     "jest": "^23.1.0",
     "watch": "^1.0.2"

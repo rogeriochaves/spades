@@ -4,7 +4,7 @@ const config = isDev => ({
   entry: "./src/index.js",
   output: {
     path: `${__dirname}/build`,
-    filename: "[name].[hash].js"
+    filename: "[name].[fullhash].js"
   },
   module: {
     rules: [
